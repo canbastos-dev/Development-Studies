@@ -1,0 +1,22 @@
+unit uICasoUsoCliente;
+
+interface
+
+uses uCliente;
+
+type
+  ICasoUsoCliente = interface
+
+  end;
+implementation
+
+function Cadastrar(cliente  : TCliente): TResponse;
+
+function Alterar(cliente  : TCliente): TRreponse;
+
+function Deletar(id  : integer): TResponse;
+
+function Consultar(dto  : DtoCliente): TResponse;
+
+
+end.

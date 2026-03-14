@@ -1,0 +1,47 @@
+unit uEnums;
+
+interface
+
+type
+
+  TErrorsCode  = record
+    NOME_NAO_INFORMADO,
+    NOME_INVALIDO,
+    DOCUMENTO_NAO_INFORMADO,
+    DOCUMENTO_INVALIDO,
+    TELEFONE_NAO_INFORMADO,
+    TELEFONE_INVALIDO : integer;
+  end;
+
+  TmsgResponse  = record
+    CADASTRADO_COM_SUCESSO,
+    ALTERADO_COM_SUCESSO,
+    CONSULTA_REALIZADA_COM_SUCESSO,
+    CONSULTA_SEM_RETORNO,
+    DELETADO_COM_SUCESSO  : string;
+  end;
+
+  function RetornaMsgResponse : TmsgResponse;
+  function RetornaErrorsCode  : TErrorsCode;
+
+implementation
+
+function RetornaErrorsCode  : TErrorsCode;
+begin
+  result.NOME_NAO_INFORMADO       := 100;
+  result.NOME_INVALIDO            := 200;
+  result.DOCUMENTO_NAO_INFORMADO  := 300;
+  result.DOCUMENTO_INVALIDO       := 400;
+  result.TELEFONE_NAO_INFORMADO   := 500;
+  result.TELEFONE_INVALIDO        := 600;
+end;
+
+function RetornaMsgResponse : TmsgResponse;
+  begin
+    result.CADASTRADO_COM_SUCESSO :=  'Cadastrado com Sucesso!';
+    result.ALTERADO_COM_SUCESSO :=  'Alterado com Sucesso!';
+    result.CONSULTA_REALIZADA_COM_SUCESSO :=  'Consulta realizada com Sucesso!';
+    result.CONSULTA_SEM_RETORNO :=  'Consulta sem Retorno!';
+    result.DELETADO_COM_SUCESSO :=  'Deletado com Sucesso!';
+  end;
+end.

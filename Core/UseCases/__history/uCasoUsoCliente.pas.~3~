@@ -1,0 +1,59 @@
+unit uCasoUsoCliente;
+
+interface
+
+uses uICasoUsoCliente, System.SysUtils, uCliente,  uDTOCliente, uResponse, uEnums;
+
+type
+  TCasoUsoCliente   = class(TInterfacedObject, ICasoUsoCliente)
+
+  function Cadastrar(cliente  : TCliente): TResponse;
+
+  function Alterar(cliente  : TCliente): TResponse;
+
+  function Deletar(id  : integer): TResponse;
+
+  function Consultar(dto  : DtoCliente): TResponse;
+
+  end;
+
+implementation
+
+{ TCasoUsoCliente }
+
+function TCasoUsoCliente.Alterar(cliente: TCliente): TResponse;
+var
+  response  : TResponse;
+begin
+
+  try
+    response.success    :=  True;
+    response.ErrorCode  :=  0;
+    response.Message    := 'Alterado com sucesso!';
+    response.Data       := nil;
+
+  Except
+    on e: Exception do
+      begin
+
+      end;
+
+  end;
+end;
+
+function TCasoUsoCliente.Cadastrar(cliente: TCliente): TResponse;
+begin
+
+end;
+
+function TCasoUsoCliente.Consultar(dto: DtoCliente): TResponse;
+begin
+
+end;
+
+function TCasoUsoCliente.Deletar(id: integer): TResponse;
+begin
+
+end;
+
+end.

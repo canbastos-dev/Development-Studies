@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2026/03/07 13:51:31.000.603,C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\locacaoConsole.dproj=C:\Users\Claudio\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2026/03/07 13:52:19.000.346,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/07 13:53:02.000.530,C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\uMenuPrincipal.pas=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/09 12:54:07.000.283,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/09 12:58:04.000.562,C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Models\uClente.pas=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/09 13:43:47.000.788,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/09 13:44:32.000.681,C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Ports\uICasoUsoCliente.pas=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/09 14:53:09.000.385,C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Models\uCliente.pas=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Models\uClente.pas</Transaction>
+    <Transaction>2026/03/09 15:38:23.000.552,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/09 15:38:51.000.348,C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Response\uResponse.pas=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/09 15:59:58.000.672,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/09 16:00:44.000.612,C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Dto\uDTOClient.pas=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/09 16:03:17.000.116,C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Dto\uDTOCliente.pas=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Dto\uDTOClient.pas</Transaction>
+    <Transaction>2026/03/09 16:15:02.000.868,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/09 16:15:41.000.410,C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\UseCases\uCasoUsoCliente.pas=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/09 18:27:01.000.726,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/09 18:27:40.000.253,C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Enums\uEnums.pas=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/11 17:59:39.000.700,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/11 18:00:29.000.164,C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Exceptions\uExceptions.pas</Transaction>
+    <Transaction>2026/03/12 20:26:17.000.218,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/12 20:26:47.000.295,C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Utils\uUtils.pas=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/13 10:59:27.000.121,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/13 10:59:54.000.074,C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Models\uVeiculo.pas</Transaction>
+    <Transaction>2026/03/13 11:18:21.000.430,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/13 11:19:02.000.558,C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Ports\uICasoUsoVeiculo.pas</Transaction>
+    <Transaction>2026/03/13 11:30:41.000.349,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/13 11:31:13.000.039,C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Dto\uDTOVeiculo.pas</Transaction>
+    <Transaction>2026/03/13 11:42:01.000.138,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas</Transaction>
+    <Transaction>2026/03/13 11:42:28.000.418,C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Console\Unit1.pas=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\UseCases\uCasoUsoVeiculo.pas</Transaction>
+  </Transactions>
+</BorlandProject>

@@ -1,0 +1,54 @@
+unit uExceptions;
+
+interface
+
+uses System.SysUtils;
+
+type
+  TExceptionNome             = class(Exception);
+  TExceptionMinimoNome       = class(Exception);
+  TExceptionDocumento        = class(Exception);
+  TExceptionMinimoDocumento  = class(Exception);
+  TExceptionTelefone         = class(Exception);
+  TExceptionMinimoTelefone   = class(Exception);
+
+procedure ExceptionNome;
+procedure ExceptionMinimoNome;
+procedure ExceptionDocumento;
+procedure ExceptionMinimoDocumento;
+procedure ExceptionTelefone;
+procedure ExceptionMinimoTelefone;
+
+implementation
+
+procedure ExceptionTelefone;
+begin
+ raise TExceptionTelefone.Create('Telefone ser preenchido');
+end;
+
+procedure ExceptionMinimoTelefone;
+begin
+ raise TExceptionMinimoTelefone.Create('Telefone deve ser maior que 4 caracteres');
+end;
+
+procedure ExceptionMinimoDocumento;
+begin
+ raise TExceptionMinimoDocumento.Create('Documento deve ser maior que 4 caracteres');
+end;
+
+procedure ExceptionDocumento;
+begin
+ raise TExceptionNome.Create('Documento deve ser informado');
+end;
+
+procedure ExceptionNome;
+begin
+ raise TExceptionNome.Create('Nome deve ser informado');
+end;
+
+procedure ExceptionMinimoNome;
+begin
+ raise TExceptionMinimoNome.Create('Nome deve ser maior que 4 caracteres');
+end;
+
+end.

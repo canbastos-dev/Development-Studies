@@ -1,0 +1,12 @@
+unit uVeiculo;
+
+interface
+
+type
+
+  TVeiculo  = class;
+
+
+implementation
+
+end.

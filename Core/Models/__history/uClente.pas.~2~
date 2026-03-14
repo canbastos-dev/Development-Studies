@@ -1,0 +1,20 @@
+unit uClente;
+
+interface
+
+type
+  TCliente  = class
+    property  Id          : integer;
+    property  Nome        : string;
+    property  Documento   : string;
+    property  Cep         : string;
+    property  Logradouro  : string;
+    property  Complemento : string;
+    property  Bairro      : string;
+    property  Cidade      : string;
+    property  UF          : string;
+    property  Telefone    : string;
+  end;
+implementation
+
+end.

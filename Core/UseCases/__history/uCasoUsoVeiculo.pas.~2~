@@ -1,0 +1,44 @@
+unit uCasoUsoVeiculo;
+
+interface
+
+uses uVeiculo, uICasoUsoVeiculo, uDTOVeiculo, uResponse;
+
+type
+  TCasoUsoVeiculo = class
+
+  function Cadastrar(veiculo  : TVeiculo): TResponse;
+
+  function Alterar(veiculo  : TVeiculo): TResponse;
+
+  function Deletar(id  : integer): TResponse;
+
+  function Consultar(dto  : DtoVeiculo): TResponse;
+
+  end;
+
+implementation
+
+{ TCasoUsoVeiculo }
+
+function TCasoUsoVeiculo.Alterar(veiculo: TVeiculo): TResponse;
+begin
+
+end;
+
+function TCasoUsoVeiculo.Cadastrar(veiculo: TVeiculo): TResponse;
+begin
+
+end;
+
+function TCasoUsoVeiculo.Consultar(dto: DtoVeiculo): TResponse;
+begin
+
+end;
+
+function TCasoUsoVeiculo.Deletar(id: integer): TResponse;
+begin
+
+end;
+
+end.
