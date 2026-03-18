@@ -1,0 +1,11 @@
+unit uIRepositoryCliente;
+
+interface
+
+type
+  IRepositoryCliente  = interface
+
+  end;
+implementation
+
+end.

@@ -1,0 +1,130 @@
+unit uCasoUsoLocacao;
+
+interface
+
+uses uICasoUsoLocacao, uResponse, uLocacao, uDtoLocacao, uEnums, uUtils,
+System.SysUtils, uExceptions;
+
+type
+  TCasoUsoLocacao = class(TInterfacedObject, ICasoUsoLocacao)
+
+    function Cadastrar(locacao  : TLocacao): TResponse;
+    function Alterar(locacao  : TLocacao):  TResponse;
+    function Consultar(dto : TDtoLocacao)  : TResponse;
+    function Deletar(id : integer)  : TResponse;
+
+    procedure ValidarId(id  : integer);
+
+  end;
+
+implementation
+
+{ TCasoUsoLocacao }
+
+function TCasoUsoLocacao.Alterar(locacao: TLocacao): TResponse;
+var
+  response  : TResponse;
+begin
+
+  try
+
+    locacao.ValidarRegrasNegocios;
+
+    response.success    :=  True;
+    response.ErrorCode  :=  0;
+    response.Message    := RetornaMsgResponse.ALTERADO_COM_SUCESSO;
+    response.Data       := nil;
+
+  Except
+    on e: Exception do
+      begin
+        response  := TratarException(e)
+      end;
+
+  end;
+
+  result := response;
+end;
+
+function TCasoUsoLocacao.Cadastrar(locacao: TLocacao): TResponse;
+var
+  response  : TResponse;
+begin
+
+  try
+
+    locacao.ValidarRegrasNegocios;
+
+    response.success    :=  True;
+    response.ErrorCode  :=  0;
+    response.Message    := RetornaMsgResponse.CADASTRADO_COM_SUCESSO;
+    response.Data       := nil;
+
+  Except
+    on e: Exception do
+      begin
+
+      end;
+
+  end;
+
+  result := response;
+end;
+
+function TCasoUsoLocacao.Consultar(dto: TDtoLocacao): TResponse;
+var
+  response  : TResponse;
+begin
+
+  try
+    response.success    :=  True;
+    response.ErrorCode  :=  0;
+    response.Message    := RetornaMsgResponse.CONSULTA_REALIZADA_COM_SUCESSO;
+    response.Data       := nil;
+
+  Except
+    on e: Exception do
+      begin
+
+      end;
+
+  end;
+
+  result := response;
+end;
+
+function TCasoUsoLocacao.Deletar(id: integer): TResponse;
+var
+  response  : TResponse;
+begin
+
+  try
+
+    validarId(id);
+
+    response.success    :=  True;
+    response.ErrorCode  :=  0;
+    response.Message    := RetornaMsgResponse.DELETADO_COM_SUCESSO;
+    response.Data       := nil;
+
+  Except
+    on e: Exception do
+      begin
+
+      end;
+
+  end;
+
+  result := response;
+end;
+
+procedure TCasoUsoLocacao.ValidarId(id: integer);
+begin
+  if id < 0 then
+  begin
+    ExceptionIdInvalido;
+  end;
+
+end;
+
+end.

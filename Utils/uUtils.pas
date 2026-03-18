@@ -1,12 +1,63 @@
-unit uUtils;
+  unit uUtils;
 
 interface
 
-uses System.SysUtils, uResponse, uExceptions, uEnums;
+uses System.SysUtils, uResponse, uExceptions, uEnums, uCliente,
+      system.Generics.Collections, typinfo, uVeiculo;
 
 function TratarException(e : Exception) : TResponse;
 
+function ListaClienteParaListaObjeto(listaObjeto  : TList<TObject>;
+listaCliente  : TList<TCliente>)  : TList<TObject>;
+
+function ListaVeiculoParaListaObjeto(listaObjeto  : TList<TObject>;
+listaVeiculo  : TList<TVeiculo>)  : TList<TObject>;
+
+function ConverteStatusString(value  :  Status)  : string;
+
+function ConverteStrStatus(value  : string) :  Status;
+
 implementation
+
+function ConverteStrStatus(value  : string) :  Status;
+begin
+  result  :=   Status(GetEnumValue(TypeInfo(Status), value));
+end;
+
+function ConverteStatusString(value  :  Status)  : string;
+begin
+  Result  :=  GetEnumName(TypeInfo(Status), integer(value));
+end;
+
+function ListaClienteParaListaObjeto(listaObjeto  : TList<TObject>;
+listaCliente  : TList<TCliente>)  : TList<TObject>;
+var
+  cliente : TCliente;
+begin
+
+  if listaCliente.Count > 0 then begin
+    for cliente in listaCliente do begin
+      listaObjeto.Add(cliente);
+    end;
+
+  end;
+  result  :=  listaObjeto;
+end;
+
+function ListaVeiculoParaListaObjeto(listaObjeto  : TList<TObject>;
+listaVeiculo  : TList<TVeiculo>)  : TList<TObject>;
+var
+  veiculo : TVeiculo;
+begin
+
+  if listaVeiculo.Count > 0 then begin
+    for veiculo in listaVeiculo do begin
+      listaObjeto.Add(veiculo);
+    end;
+
+  end;
+  result  :=  listaObjeto;
+end;
 
 function TratarException(e : Exception) : TResponse;
 var
@@ -20,6 +71,26 @@ begin
   if e.ClassType  = TExceptionIdInvalido then
   begin
     response.ErrorCode  := RetornaErrorsCode.ID_INVALIDO;
+  end;
+
+  if e.ClassType =  TExceptionDatabase  then begin
+    response.ErrorCode  :=  RetornaErrorsCode.ERROR_BANCO_DADOS;
+  end;
+
+
+  if e.ClassType  = TExceptionLocacaoCliente then
+  begin
+    response.ErrorCode  := RetornaErrorsCode.CLIENTE_NAO_INFORMADO;
+  end;
+
+  if e.ClassType  = TExceptionLocacaoVeiculo then
+  begin
+    response.ErrorCode  := RetornaErrorsCode.VEICULO_INDISPONIVEL;
+  end;
+
+  if e.ClassType  = TExceptionLocacaoVeiculo then
+  begin
+    response.ErrorCode  := RetornaErrorsCode.VEICULO_NAO_INFORMADO;
   end;
 
   if e.ClassType  = TExceptionNome then

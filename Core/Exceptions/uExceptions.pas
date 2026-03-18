@@ -18,6 +18,12 @@ type
   TExceptionMinimoPlacaVeiculo  =   class (exception);
   TExceptionValorVeiculo        =   class (exception);
 
+  TExceptionLocacaoVeiculo               =   class (exception);
+  TExceptionLocacaoCliente               =   class (exception);
+  TExceptionLocacaoVeiculoAlugado        =   class (exception);
+
+  TExceptionDatabase            = class(exception);
+
   TExceptionIdInvalido          =   class (exception);
 
 // exceptions CLIENTES
@@ -35,6 +41,13 @@ procedure ExceptionPlacaVeiculo;
 procedure ExceptionMinimoPlacaVeiculo;
 procedure ExceptionValorVeiculo;
 
+//Exceptions LOCAÇÕES
+procedure ExceptionLocacaoVeiculo;
+procedure ExceptionLocacaoCliente;
+procedure ExceptionLocacaoVeiculoAlugado;
+
+procedure ExceptionDatabase(message : string);
+
 procedure ExceptionIdInvalido;
 
 
@@ -43,6 +56,26 @@ implementation
 procedure ExceptionIdInvalido;
 begin
   raise TExceptionIdInvalido.Create('Id Invalido');
+end;
+
+procedure ExceptionDatabase(message : string);
+begin
+  raise TExceptionDatabase.Create(message);
+end;
+
+procedure ExceptionLocacaoVeiculo;
+begin
+  raise TExceptionLocacaoVeiculo.Create('Veículo não informado');
+end;
+
+procedure ExceptionLocacaoCliente;
+begin
+  raise TExceptionLocacaoCliente.Create('Cliente não informado');
+end;
+
+procedure ExceptionLocacaoVeiculoAlugado;
+begin
+
 end;
 
 procedure ExceptionNomeVeiculo;

@@ -1,0 +1,18 @@
+unit uRepositoryCliente;
+
+interface
+
+uses uCliente, uDtoCliente, uIRepositoryCliente, System.Generics.Collections,
+System.SysUtils, uConfiguracaoBD_pg;
+
+type
+  TRepositoryCliente =  class(TInterfacedObject, uIRepositoryCliente)
+    procedure Cadastrar(client  : TCliente);
+    procedure Alterar(client  : TCliente);
+    procedure Excluir(id  : integer);
+    function Consultar(dto  : DtoCliente) : TList<TCliente>;
+  end;
+
+implementation
+
+end.

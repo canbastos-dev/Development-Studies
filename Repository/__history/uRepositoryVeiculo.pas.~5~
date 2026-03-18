@@ -1,0 +1,90 @@
+unit uRepositoryVeiculo;
+
+interface
+
+uses uVeiculo, uDtoVeiculo, uIRepositoryVeiculo, System.Generics.Collections,
+System.SysUtils, uConfiguracaoBD_pg, uUtils ;
+
+type
+
+  TRepositoryVeiculo  = class(TInterfacedObject, IRepositoryVeiculo)
+  private
+    FLista: TList<TVeiculo>;
+    ConfiguraçãoDB  : TConfiguracaoBD;
+    procedure SetLista(const Value: TList<TVeiculo>);
+  published
+
+    procedure Cadastrar(veiculo  : TVeiculo);
+    procedure Alterar(veiculo  : TVeiculo);
+    procedure Excluir(id  : integer);
+    function Consultar(dto  : DtoVeiculo) : TList<TVeiculo>;
+
+    property Lista  :   TList<TVeiculo> read FLista write SetLista;
+
+    constructor create;
+    destructor destroy; override;
+
+  end;
+
+implementation
+
+{ TRepositoryVeiculo }
+
+procedure TRepositoryVeiculo.Alterar(veiculo: TVeiculo);
+var
+  sql : string;
+begin
+
+  sql :=  'update veiculos set '  +
+          'nome = ' + QuotedStr(veiculo.Nome) + ',' +
+          'placa  = ' + QuotedStr(veiculo.Placa)  + ',' +
+          'valor  = ' + StringReplace(CurrToStr(veiculo.valor),',','.',[])  + ',' +
+          'status = ' + QuotedStr(ConverteStatusString(veiculo.status)) +
+          'where id = ' + IntToStr(veiculo.id);
+end;
+
+procedure TRepositoryVeiculo.Cadastrar(veiculo: TVeiculo);
+var
+  sql : string;
+begin
+
+  sql :=  'insert into Veiculo (nome, placa, valor, status'+
+          'values ('+
+          QuotedStr(veiculo.Nome)  +  ',' +
+          QuotedStr(veiculo.placa)  +  ',' +
+          StringReplace(CurrToStr(veiculo.valor),',','.',[])  +  ',' +
+          QuotedStr(ConverteStatusString(veiculo.status))  +  ')' ;
+
+          ConfiguraçãoDB.ExecSql(sql);
+end;
+
+function TRepositoryVeiculo.Consultar(dto: DtoVeiculo): TList<TVeiculo>;
+begin
+
+end;
+
+constructor TRepositoryVeiculo.create;
+begin
+  Lista :=  TList<TVeiculo>.Create;
+  ConfiguraçãoDB  := TConfiguracaoBD.Create;
+
+end;
+
+destructor TRepositoryVeiculo.destroy;
+begin
+  Lista.Free;
+  ConfiguraçãoDB.Free;
+  inherited;
+end;
+
+procedure TRepositoryVeiculo.Excluir(id: integer);
+begin
+
+end;
+
+procedure TRepositoryVeiculo.SetLista(const Value: TList<TVeiculo>);
+begin
+  FLista := Value;
+end;
+
+end.

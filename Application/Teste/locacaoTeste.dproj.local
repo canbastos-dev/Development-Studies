@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+  <Transactions>
+    <Transaction>2026/03/13 22:10:26.766,=C:\Users\Claudio\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2026/03/13 22:11:06.556,C:\Users\Claudio\Documents\Embarcadero\Studio\Projects\locacaoTeste.dproj=C:\Users\Claudio\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2026/03/13 22:13:30.364,C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Teste\uTesteUseCaseCliente.pas=C:\Users\Claudio\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2026/03/13 22:13:49.281,C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Application\Teste\locacaoTeste.dproj=C:\Users\Claudio\Documents\Embarcadero\Studio\Projects\locacaoTeste.dproj</Transaction>
+    <Transaction>2026/03/13 23:06:58.242,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Dto\uDTOCliente.pas</Transaction>
+    <Transaction>2026/03/13 23:07:18.353,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Enums\uEnums.pas</Transaction>
+    <Transaction>2026/03/13 23:07:31.172,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Exceptions\uExceptions.pas</Transaction>
+    <Transaction>2026/03/13 23:07:54.434,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Models\uCliente.pas</Transaction>
+    <Transaction>2026/03/13 23:08:11.699,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Ports\uICasoUsoCliente.pas</Transaction>
+    <Transaction>2026/03/13 23:08:34.702,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\Response\uResponse.pas</Transaction>
+    <Transaction>2026/03/13 23:08:55.250,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Core\UseCases\uCasoUsoCliente.pas</Transaction>
+    <Transaction>2026/03/13 23:09:21.517,=C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Utils\uUtils.pas</Transaction>
+  </Transactions>
+</BorlandProject>

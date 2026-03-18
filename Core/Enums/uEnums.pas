@@ -16,15 +16,24 @@ type
     ID_INVALIDO,
     PLACA_NAO_INFORMADA,
     PLACA_INVALIDA,
-    VALOR_INVALIDO : integer;
+    VALOR_INVALIDO,
+    VEICULO_NAO_INFORMADO,
+    CLIENTE_NAO_INFORMADO,
+    VEICULO_INDISPONIVEL,
+    ERROR_BANCO_DADOS      : integer;
+
   end;
 
   TmsgResponse  = record
     CADASTRADO_COM_SUCESSO,
     ALTERADO_COM_SUCESSO,
     CONSULTA_REALIZADA_COM_SUCESSO,
+    CONSULTA_REALIZADA_SEM_RETORNO,
     CONSULTA_SEM_RETORNO,
-    DELETADO_COM_SUCESSO  : string;
+    DELETADO_COM_SUCESSO,
+    VEICULO_NAO_INFORMADO,
+    CLIENTE_NAO_INFORMADO,
+    VEICULO_INDISPONIVEL  : string;
   end;
 
   function RetornaMsgResponse : TmsgResponse;
@@ -35,22 +44,32 @@ implementation
 function RetornaErrorsCode  : TErrorsCode;
 begin
   result.NOME_NAO_INFORMADO       := 100;
-  result.NOME_INVALIDO            := 200;
-  result.DOCUMENTO_NAO_INFORMADO  := 300;
-  result.DOCUMENTO_INVALIDO       := 400;
-  result.TELEFONE_NAO_INFORMADO   := 500;
-  result.TELEFONE_INVALIDO        := 600;
-  result.PLACA_INVALIDA           := 700;
-  result.PLACA_NAO_INFORMADA      := 800;
-  result.VALOR_INVALIDO           := 900;
+  result.NOME_INVALIDO            := 101;
+  result.DOCUMENTO_NAO_INFORMADO  := 102;
+  result.DOCUMENTO_INVALIDO       := 103;
+  result.TELEFONE_NAO_INFORMADO   := 104;
+  result.TELEFONE_INVALIDO        := 105;
+  result.PLACA_INVALIDA           := 106;
+  result.PLACA_NAO_INFORMADA      := 107;
+  result.VALOR_INVALIDO           := 108;
+  result.ID_INVALIDO              := 109;
+  result.VEICULO_NAO_INFORMADO    := 110;
+  result.CLIENTE_NAO_INFORMADO    := 111;
+  result.VEICULO_INDISPONIVEL     := 112;
+  result.ERROR_BANCO_DADOS        := 113;
+
 end;
 
 function RetornaMsgResponse : TmsgResponse;
   begin
-    result.CADASTRADO_COM_SUCESSO :=  'Cadastrado com Sucesso!';
-    result.ALTERADO_COM_SUCESSO :=  'Alterado com Sucesso!';
+    result.CADASTRADO_COM_SUCESSO         :=  'Cadastrado com Sucesso!';
+    result.ALTERADO_COM_SUCESSO           :=  'Alterado com Sucesso!';
     result.CONSULTA_REALIZADA_COM_SUCESSO :=  'Consulta realizada com Sucesso!';
-    result.CONSULTA_SEM_RETORNO :=  'Consulta sem Retorno!';
-    result.DELETADO_COM_SUCESSO :=  'Deletado com Sucesso!';
+    result.CONSULTA_REALIZADA_SEM_RETORNO :=  'Consulta realizada sem Dados!';
+    result.CONSULTA_SEM_RETORNO           :=  'Consulta sem Retorno!';
+    result.DELETADO_COM_SUCESSO           :=  'Deletado com Sucesso!';
+    result.VEICULO_NAO_INFORMADO          :=  'Veículo não informado!';
+    result.CLIENTE_NAO_INFORMADO          :=  'Cliente não informado!';
+    result.VEICULO_INDISPONIVEL           :=  'Veículo indisponível!';
   end;
 end.

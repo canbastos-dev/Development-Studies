@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{9970AAFD-D915-454B-A74C-9654FCFF111D}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Console\locacaoConsole.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Teste\locacaoTeste.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="locacaoConsole">
+        <MSBuild Projects="Console\locacaoConsole.dproj"/>
+    </Target>
+    <Target Name="locacaoConsole:Clean">
+        <MSBuild Projects="Console\locacaoConsole.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="locacaoConsole:Make">
+        <MSBuild Projects="Console\locacaoConsole.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="locacaoTeste">
+        <MSBuild Projects="Teste\locacaoTeste.dproj"/>
+    </Target>
+    <Target Name="locacaoTeste:Clean">
+        <MSBuild Projects="Teste\locacaoTeste.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="locacaoTeste:Make">
+        <MSBuild Projects="Teste\locacaoTeste.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="locacaoConsole;locacaoTeste"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="locacaoConsole:Clean;locacaoTeste:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="locacaoConsole:Make;locacaoTeste:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

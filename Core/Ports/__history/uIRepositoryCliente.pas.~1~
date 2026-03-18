@@ -1,0 +1,9 @@
+unit uIRepositoryCliente;
+
+interface
+
+type
+  reposit
+implementation
+
+end.

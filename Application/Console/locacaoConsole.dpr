@@ -18,7 +18,16 @@ uses
   uVeiculo in '..\..\Core\Models\uVeiculo.pas',
   uICasoUsoVeiculo in '..\..\Core\Ports\uICasoUsoVeiculo.pas',
   uDTOVeiculo in '..\..\Core\Dto\uDTOVeiculo.pas',
-  uCasoUsoVeiculo in '..\..\Core\UseCases\uCasoUsoVeiculo.pas';
+  uCasoUsoVeiculo in '..\..\Core\UseCases\uCasoUsoVeiculo.pas',
+  uLocacao in '..\..\Core\Models\uLocacao.pas',
+  uICasoUsoLocacao in '..\..\Core\Ports\uICasoUsoLocacao.pas',
+  uDTOLocacao in '..\..\Core\Dto\uDTOLocacao.pas',
+  uCasoUsoLocacao in '..\..\Core\UseCases\uCasoUsoLocacao.pas',
+  uIRepositoryCliente in '..\..\Core\Ports\uIRepositoryCliente.pas',
+  uConfiguracaoBD_pg in '..\..\Repository\uConfiguracaoBD_pg.pas',
+  uRepositoryCliente in '..\..\Repository\uRepositoryCliente.pas',
+  uIRepositoryVeiculo in '..\..\Core\Ports\uIRepositoryVeiculo.pas',
+  uRepositoryVeiculo in '..\..\Repository\uRepositoryVeiculo.pas';
 
 begin
   try

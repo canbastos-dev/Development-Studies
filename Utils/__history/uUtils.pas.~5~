@@ -1,0 +1,88 @@
+  unit uUtils;
+
+interface
+
+uses System.SysUtils, uResponse, uExceptions, uEnums;
+
+function TratarException(e : Exception) : TResponse;
+
+implementation
+
+function TratarException(e : Exception) : TResponse;
+var
+  response  : TResponse;
+begin
+  response.success    :=  false;
+  response.Message    :=  e.Message;
+  response.ErrorCode  :=  0;
+  response.Data       :=  nil;
+
+  if e.ClassType  = TExceptionIdInvalido then
+  begin
+    response.ErrorCode  := RetornaErrorsCode.ID_INVALIDO;
+  end;
+
+  if e.ClassType  = TExceptionLocacaoCliente then
+  begin
+    response.ErrorCode  := RetornaErrorsCode.CLIENTE_NAO_INFORMADO;
+  end;
+
+  if e.ClassType  = TExceptionLocacaoVeiculo then
+  begin
+    response.ErrorCode  := RetornaErrorsCode.VEICULO_INDISPONIVEL;
+  end;
+
+  if e.ClassType  = TExceptionLocacaoVeiculo then
+  begin
+    response.ErrorCode  := RetornaErrorsCode.VEICULO_NAO_INFORMADO;
+  end;
+
+  if e.ClassType  = TExceptionNome then
+  begin
+    response.ErrorCode  := RetornaErrorsCode.NOME_NAO_INFORMADO;
+  end;
+
+  if e.ClassType  = TExceptionMinimoNome then
+  begin
+    response.ErrorCode  := RetornaErrorsCode.NOME_INVALIDO;
+  end;
+
+  if e.ClassType  = TExceptionDocumento then
+  begin
+    response.ErrorCode  := RetornaErrorsCode.DOCUMENTO_NAO_INFORMADO;
+  end;
+
+  if e.ClassType  = TExceptionMinimoDocumento then
+  begin
+    response.ErrorCode  := RetornaErrorsCode.DOCUMENTO_INVALIDO;
+  end;
+
+  if e.ClassType  = TExceptionTelefone then
+  begin
+    response.ErrorCode  := RetornaErrorsCode.TELEFONE_NAO_INFORMADO;
+  end;
+
+  if e.ClassType  = TExceptionMinimoTelefone then
+  begin
+    response.ErrorCode  := RetornaErrorsCode.TELEFONE_INVALIDO;
+  end;
+
+  if e.ClassType  = TExceptionValorVeiculo then
+  begin
+    response.ErrorCode  := RetornaErrorsCode.VALOR_INVALIDO;
+  end;
+
+  if e.ClassType  = TExceptionPlacaVeiculo then
+  begin
+    response.ErrorCode  := RetornaErrorsCode.PLACA_NAO_INFORMADA;
+  end;
+
+  if e.ClassType  = TExceptionMinimoPlacaVeiculo then
+  begin
+    response.ErrorCode  := RetornaErrorsCode.PLACA_INVALIDA;
+  end;
+
+  result  :=  response;
+end;
+
+end.

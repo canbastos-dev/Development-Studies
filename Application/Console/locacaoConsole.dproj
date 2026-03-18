@@ -191,6 +191,15 @@
         <DCCReference Include="..\..\Core\Ports\uICasoUsoVeiculo.pas"/>
         <DCCReference Include="..\..\Core\Dto\uDTOVeiculo.pas"/>
         <DCCReference Include="..\..\Core\UseCases\uCasoUsoVeiculo.pas"/>
+        <DCCReference Include="..\..\Core\Models\uLocacao.pas"/>
+        <DCCReference Include="..\..\Core\Ports\uICasoUsoLocacao.pas"/>
+        <DCCReference Include="..\..\Core\Dto\uDTOLocacao.pas"/>
+        <DCCReference Include="..\..\Core\UseCases\uCasoUsoLocacao.pas"/>
+        <DCCReference Include="..\..\Core\Ports\uIRepositoryCliente.pas"/>
+        <DCCReference Include="..\..\Repository\uConfiguracaoBD_pg.pas"/>
+        <DCCReference Include="..\..\Repository\uRepositoryCliente.pas"/>
+        <DCCReference Include="..\..\Core\Ports\uIRepositoryVeiculo.pas"/>
+        <DCCReference Include="..\..\Repository\uRepositoryVeiculo.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

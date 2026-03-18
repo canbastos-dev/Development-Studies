@@ -1,0 +1,74 @@
+unit uConfiguracaoBD;
+
+interface
+
+uses firedac.comp.Client, firedac.phys.MSSQLMeta, inifiles,
+System.SysUtils, uExceptions;
+
+type
+  TConfiguracaoBD = class
+  private
+    connection  : TFDConnection;
+    // FDPhsysMSSQLDRiverlink  : TFDPhysMSSQLMetadata;
+    FDPhysMSSQLMetadata  : TFDPhysMSSQLMetadata;
+    FQuery: TFDQuery;
+    procedure SetQuery(const Value: TFDQuery);
+  published
+
+    function Conexao  : TFDconnection;
+    procedure ExecSql(sql : string);
+    function Consulta(sql : string) : Boolean;
+    property Query  : TFDQuery read FQuery write SetQuery;
+
+    constructor Create;
+    destructor  destroy;override;
+  end;
+implementation
+
+{ TConfiguracaoBD }
+
+function TConfiguracaoBD.Conexao: TFDconnection;
+begin
+
+end;
+
+function TConfiguracaoBD.Consulta(sql: string): Boolean;
+begin
+
+end;
+
+constructor TConfiguracaoBD.Create;
+var
+  diretorio, server, user, database, password, driver : string;
+  arquivoini  : Tinifile;
+begin
+
+  diretorio   :=  ExtractFileDir(GetCurrentDir);
+  arquivoini  :=  TIniFile.Create(diretorio + '\cofiguracao.ini');
+  server      :=  arquivoini.ReadString('conexao','server','');
+  database    :=  arquivoini.ReadString('conexao','database','');
+  user        :=  arquivoini.ReadString('conexao','user','');
+  password    :=  arquivoini.ReadString('conexao','passsword','');
+  driver      :=  'MSSQLMeta';
+
+  connection  :=   TFDConnection.Create(nil);
+  FDPhysMSSQLMetadata  :=  TFDPhysMSSQLMetadata.Create(nil);
+end;
+
+destructor TConfiguracaoBD.destroy;
+begin
+
+  inherited;
+end;
+
+procedure TConfiguracaoBD.ExecSql(sql: string);
+begin
+
+end;
+
+procedure TConfiguracaoBD.SetQuery(const Value: TFDQuery);
+begin
+  FQuery := Value;
+end;
+
+end.

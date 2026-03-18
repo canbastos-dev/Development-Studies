@@ -3,10 +3,17 @@ unit uCasoUsoVeiculo;
 interface
 
 uses uVeiculo, uICasoUsoVeiculo, uDTOVeiculo, uResponse, uExceptions, uEnums, uUtils,
-  System.SysUtils;
+  System.SysUtils,System.Generics.Collections, uIRepositoryVeiculo;
 
 type
   TCasoUsoVeiculo = class
+  private
+    FRepository : IRepositoryVeiculo;
+    FListaObjeto: TList<TObject>;
+    FLista: TList<TVeiculo>;
+    procedure SetListaObjeto(const Value: TList<TObject>);
+    procedure SetLista(const Value: TList<TVeiculo>);
+  published
 
   function Cadastrar(veiculo  : TVeiculo): TResponse;
 
@@ -17,6 +24,13 @@ type
   function Consultar(dto  : DtoVeiculo): TResponse;
 
   procedure ValidarId(id  : integer);
+
+  property ListaObjeto  : TList<TObject> read FListaObjeto write SetListaObjeto;
+  property Lista  : TList<TVeiculo> read FLista write SetLista;
+
+
+  constructor create(repository  : IRepositoryVeiculo);
+  destructor destroy;override;
 
   end;
 
@@ -32,6 +46,8 @@ begin
   try
 
     veiculo.ValidarRegrasNegocios;
+
+    FRepository.Alterar(veiculo);
 
     response.success    :=  True;
     response.ErrorCode  :=  0;
@@ -58,6 +74,8 @@ begin
 
     veiculo.ValidarRegrasNegocios;
 
+    FRepository.Cadastrar(veiculo);
+
     response.success    :=  True;
     response.ErrorCode  :=  0;
     response.Message    := RetornaMsgResponse.CADASTRADO_COM_SUCESSO;
@@ -80,10 +98,23 @@ var
 begin
 
   try
-    response.success    :=  True;
-    response.ErrorCode  :=  0;
-    response.Message    := RetornaMsgResponse.CONSULTA_REALIZADA_COM_SUCESSO;
-    response.Data       := nil;
+
+    ListaObjeto.Clear;
+    Lista :=  FRepository.Consultar(dto);
+
+    if Lista.Count  > 0 then begin
+      response.success    :=  True;
+      response.ErrorCode  :=  0;
+      response.Message    := RetornaMsgResponse.CONSULTA_REALIZADA_COM_SUCESSO;
+      response.Data       := ListaVeiculoParaListaObjeto(ListaObjeto, Lista);
+
+    end else begin
+      response.success    :=  True;
+      response.ErrorCode  :=  0;
+      response.Message    := RetornaMsgResponse.CONSULTA_REALIZADA_SEM_RETORNO;
+      response.Data       := nil;
+
+    end;
 
   Except
     on e: Exception do
@@ -105,6 +136,8 @@ begin
 
     ValidarId(id);
 
+    FRepository.Excluir(id);
+
     response.success    :=  True;
     response.ErrorCode  :=  0;
     response.Message    := RetornaMsgResponse.DELETADO_COM_SUCESSO;
@@ -119,6 +152,30 @@ begin
   end;
 
   result := response;
+end;
+
+constructor TCasoUsoVeiculo.create(repository: IRepositoryVeiculo);
+begin
+  FRepository :=  repository;
+  Lista :=  TList<TVeiculo>.Create;
+  ListaObjeto  := TList<TObject>.Create;
+end;
+
+destructor TCasoUsoVeiculo.destroy;
+begin
+  Lista.free;
+  ListaObjeto.free;
+  inherited;
+end;
+
+procedure TCasoUsoVeiculo.SetLista(const Value: TList<TVeiculo>);
+begin
+  FLista := Value;
+end;
+
+procedure TCasoUsoVeiculo.SetListaObjeto(const Value: TList<TObject>);
+begin
+  FListaObjeto := Value;
 end;
 
 procedure TCasoUsoVeiculo.ValidarId(id: integer);

@@ -1,0 +1,94 @@
+unit uConfiguracaoBD;
+
+interface
+
+uses firedac.comp.Client, Firedac.phys.mssql, inifiles,
+System.SysUtils, uExceptions;
+
+type
+  TConfiguracaoBD = class
+  private
+    connection  : TFDConnection;
+    FDPhsysMSSQLDriverLink  : TFDPhysMSSQLDriverLink;
+    FQuery: TFDQuery;
+    procedure SetQuery(const Value: TFDQuery);
+  published
+
+    function Conexao  : TFDconnection;
+    procedure ExecSql(sql : string);
+    function Consulta(sql : string) : Boolean;
+    property Query  : TFDQuery read FQuery write SetQuery;
+
+    constructor Create;
+    destructor  destroy;override;
+  end;
+implementation
+
+{ TConfiguracaoBD }
+
+function TConfiguracaoBD.Conexao: TFDconnection;
+begin
+
+end;
+
+function TConfiguracaoBD.Consulta(sql: string): Boolean;
+begin
+
+end;
+
+constructor TConfiguracaoBD.Create;
+var
+  diretorio, server, user, database, password, driver : string;
+  arquivoini  : Tinifile;
+begin
+
+  // leitura do arquivo ini
+  diretorio   :=  ExtractFileDir(GetCurrentDir);
+  arquivoini  :=  TIniFile.Create(diretorio + '\cofiguracao.ini');
+  server      :=  arquivoini.ReadString('conexao','server','');
+  database    :=  arquivoini.ReadString('conexao','database','');
+  user        :=  arquivoini.ReadString('conexao','user','');
+  password    :=  arquivoini.ReadString('conexao','passsword','');
+  driver      :=  'MSSQL';
+
+  try
+    connection  :=   TFDConnection.Create(nil);
+    FDPhsysMSSQLDriverLink  :=  TFDPhysMSSQLDriverLink.Create(nil);
+
+    connection.LoginPrompt  :=  false;
+    connection.Params.Clear;
+    connection.Params.add('DriverID='+driver);
+    connection.Params.add('Database='+database);
+    connection.Params.add('Password='+password);
+    connection.Params.add('User='+user);
+    connection.Params.add('Server='+server);
+
+    connection.Open();
+    Query := TFDQuery.Create(nil);
+    Query.Connection  :=  connection;
+  Except
+     on e:Exception do begin
+       connection.Free;
+       FDPhsysMSSQLDriverLink.free;
+       Query.free;
+     end;
+  end;
+end;
+
+destructor TConfiguracaoBD.destroy;
+begin
+
+  inherited;
+end;
+
+procedure TConfiguracaoBD.ExecSql(sql: string);
+begin
+
+end;
+
+procedure TConfiguracaoBD.SetQuery(const Value: TFDQuery);
+begin
+  FQuery := Value;
+end;
+
+end.

@@ -9,7 +9,7 @@ type
     success   : Boolean;
     ErrorCode : Integer;
     Message   : string;
-    Data      : TObjectList<TObject>;
+    Data      : TList<TObject>;
   end;
 
 implementation

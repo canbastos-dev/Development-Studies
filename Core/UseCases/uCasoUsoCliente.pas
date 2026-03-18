@@ -3,18 +3,32 @@ unit uCasoUsoCliente;
 interface
 
 uses uICasoUsoCliente, System.SysUtils, uCliente,  uDTOCliente, uResponse, uEnums,
-      uUtils;
+      uUtils, uExceptions, uIRepositoryCliente, System.Generics.Collections;
 
 type
   TCasoUsoCliente   = class(TInterfacedObject, ICasoUsoCliente)
 
+  private
+    FRepository : IRepositoryCliente;
+    FLista: TList<TCliente>;
+    FListaObjeto: TList<TObject>;
+    procedure SetLista(const Value: TList<TCliente>);
+    procedure SetListaObjeto(const Value: TList<TObject>);
+
+
+  published
+
   function Cadastrar(cliente  : TCliente): TResponse;
-
   function Alterar(cliente  : TCliente): TResponse;
-
   function Deletar(id  : integer): TResponse;
-
   function Consultar(dto  : DtoCliente): TResponse;
+
+  property Lista  : TList<TCliente> read FLista write SetLista;
+  property ListaObjeto  :  TList<TObject> read FListaObjeto write SetListaObjeto;
+  procedure ValidarId(id  : integer);
+
+  constructor create(repository : IRepositoryCliente);
+  destructor  destroy;override;
 
   end;
 
@@ -30,6 +44,8 @@ begin
   try
 
     cliente.ValidarRegrasNegocios;
+
+    FRepository.Alterar(cliente);
 
     response.success    :=  True;
     response.ErrorCode  :=  0;
@@ -56,6 +72,8 @@ begin
 
     cliente.ValidarRegrasNegocios;
 
+    FRepository.Cadastrar(cliente);
+
     response.success    :=  True;
     response.ErrorCode  :=  0;
     response.Message    := RetornaMsgResponse.CADASTRADO_COM_SUCESSO;
@@ -78,10 +96,23 @@ var
 begin
 
   try
-    response.success    :=  True;
-    response.ErrorCode  :=  0;
-    response.Message    := RetornaMsgResponse.CONSULTA_REALIZADA_COM_SUCESSO;
-    response.Data       := nil;
+    ListaObjeto.Clear;
+    Lista :=  FRepository.Consultar(dto);
+
+    if Lista.Count  > 0 then begin
+      response.success    :=  True;
+      response.ErrorCode  :=  0;
+      response.Message    := RetornaMsgResponse.CONSULTA_REALIZADA_COM_SUCESSO;
+      response.Data       := ListaClienteParaListaObjeto(ListaObjeto, Lista);
+
+    end else begin
+      response.success    :=  True;
+      response.ErrorCode  :=  0;
+      response.Message    := RetornaMsgResponse.CONSULTA_REALIZADA_SEM_RETORNO;
+      response.Data       := nil;
+
+    end;
+
 
   Except
     on e: Exception do
@@ -100,6 +131,11 @@ var
 begin
 
   try
+
+    ValidarId(id);
+
+    FRepository.Excluir(id);
+
     response.success    :=  True;
     response.ErrorCode  :=  0;
     response.Message    := RetornaMsgResponse.DELETADO_COM_SUCESSO;
@@ -114,6 +150,39 @@ begin
   end;
 
   result := response;
+end;
+
+constructor TCasoUsoCliente.create(repository: IRepositoryCliente);
+begin
+  FRepository :=  repository;
+  Lista :=  TList<TCliente>.Create;
+  ListaObjeto  := TList<TObject>.Create;
+end;
+
+destructor TCasoUsoCliente.destroy;
+begin
+  Lista.Free;
+  ListaObjeto.Free;
+  inherited;
+end;
+
+procedure TCasoUsoCliente.SetLista(const Value: TList<TCliente>);
+begin
+  FLista := Value;
+end;
+
+procedure TCasoUsoCliente.SetListaObjeto(const Value: TList<TObject>);
+begin
+  FListaObjeto := Value;
+end;
+
+procedure TCasoUsoCliente.ValidarId(id: integer);
+begin
+  if id < 0 then
+  begin
+    ExceptionIdInvalido;
+  end;
+
 end;
 
 end.
