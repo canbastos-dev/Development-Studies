@@ -1,0 +1,123 @@
+unit uControllerLocacao;
+
+interface
+
+uses uCliente, uVeiculo, ulocacao, uDTOLocacao, uDTOVeiculo, uDTOCliente,
+  uIRepositoryLocacao, uIRepositoryVeiculo, uIRepositoryCliente, uICasoUsoLocacao,
+  uICasoUsoVeiculo, uICasoUsoCliente, uEnums, uUtils, uCasoUsoLocacao, uCasoUsoVeiculo,
+  uCasoUsoCliente, uResponse;
+
+type
+  TControllerLocacao  = class
+  private
+    FCasoUsoVeiculo: ICasoUsoVeiculo;
+    FCasoUsoCliente: ICasoUsoCliente;
+    FCasoUsoLocacao: ICasoUsoLocacao;
+    procedure SetCasoUsoCliente(const Value: ICasoUsoCliente);
+    procedure SetCasoUsoLocacao(const Value: ICasoUsoLocacao);
+    procedure SetCasoUsoVeiculo(const Value: ICasoUsoVeiculo);
+  published
+
+    function Cadastrar(idcliente, idveiculo : integer)  :string;
+    function Alterar(idlocacao, idcliente, idveiculo  :integer;
+     datadevolucao :Tdatetime)  :string;
+    function Deletar(idlocacao  :integer) :string;
+    function Consultar(idlocacao, idcliente :integer; datalocacao,
+      datadevolucao :TDatetime) :string;
+
+    property CasoUsoLocacao : ICasoUsoLocacao read FCasoUsoLocacao write SetCasoUsoLocacao;
+    property CasoUsoCliente : ICasoUsoCliente read FCasoUsoCliente write SetCasoUsoCliente;
+    property CasoUsoVeiculo : ICasoUsoVeiculo read FCasoUsoVeiculo write SetCasoUsoVeiculo;
+
+    constructor create(repositoryLocacao  :IRepositoryLocacao;
+      repositoryVeiculo  :IRepositoryVeiculo; repositoryCliente :IRepositoryCliente);
+    destructor destroy;override;
+
+  end;
+
+implementation
+
+{ TControllerLocacao }
+
+function TControllerLocacao.Alterar(idlocacao, idcliente, idveiculo: integer;
+  datadevolucao: Tdatetime): string;
+begin
+
+end;
+
+function TControllerLocacao.Cadastrar(idcliente, idveiculo: integer): string;
+var
+  response  : TResponse;
+  cliente   : TCliente;
+  veiculo   : TVeiculo;
+  locacao   : TLocacao;
+
+  _dtoCliente : DtoCliente;
+  _dtoVeiculo : DtoVeiculo;
+begin
+  _dtoCliente.id  := idcliente;
+
+  response  :=  CasoUsoCliente.Consultar(_dtoCliente);
+
+  if (response.success) and (response.Message = RetornaMsgResponse.CONSULTA_REALIZADA_SEM_RETORNO) then
+  begin
+    Result  :=  'Id do cliente inválido';
+    exit;
+  end;
+
+  cliente :=  TCliente(response.Data[0]);
+
+  _dtoVeiculo.id  := idveiculo;
+
+  response  :=  CasoUsoVeiculo.Consultar(_dtoVeiculo);
+
+  if (response.success) and (response.Message = RetornaMsgResponse.CONSULTA_REALIZADA_SEM_RETORNO) then
+  begin
+    Result  :=  'Id do veículo inválido';
+    exit;
+  end;
+
+  veiculo :=  TVeiculo(response.Data[0]);
+end;
+
+function TControllerLocacao.Consultar(idlocacao, idcliente: integer;
+  datalocacao, datadevolucao: TDatetime): string;
+begin
+
+end;
+
+constructor TControllerLocacao.create(repositoryLocacao: IRepositoryLocacao;
+  repositoryVeiculo: IRepositoryVeiculo; repositoryCliente: IRepositoryCliente);
+begin
+  CasoUsoLocacao  :=  TCasoUsoLocacao.create(repositoryLocacao);
+  CasoUsoCliente  :=  TCasoUsoCliente.create(repositoryCliente);
+  CasoUsoVeiculo  :=  TCasoUsoVeiculo.create(repositoryVeiculo);
+end;
+
+function TControllerLocacao.Deletar(idlocacao: integer): string;
+begin
+
+end;
+
+destructor TControllerLocacao.destroy;
+begin
+
+  inherited;
+end;
+
+procedure TControllerLocacao.SetCasoUsoCliente(const Value: ICasoUsoCliente);
+begin
+  FCasoUsoCliente := Value;
+end;
+
+procedure TControllerLocacao.SetCasoUsoLocacao(const Value: ICasoUsoLocacao);
+begin
+  FCasoUsoLocacao := Value;
+end;
+
+procedure TControllerLocacao.SetCasoUsoVeiculo(const Value: ICasoUsoVeiculo);
+begin
+  FCasoUsoVeiculo := Value;
+end;
+
+end.

@@ -1,0 +1,44 @@
+unit uControllerVeiculo;
+
+interface
+
+uses uVeiculo, uDtoVeiculo, uResponse, uIRepositoryVeiculo, uEnums, uIcasoUsoVeiculo,
+  uCasoUsoVeiculo;
+
+type
+  TControllerVeiculo  = class
+
+    function Cadastrar(nome, placa  :string;  valor :currency): String;
+    function Alterar(id :integer; nome, placa  :string;  valor :currency): String;
+    function Deletar(id :integer): String;
+    function Consultar(id :integer; nome, placa  :string): String;
+ 
+  end;
+
+implementation
+
+{ TControllerVeiculo }
+
+function TControllerVeiculo.Alterar(id: integer; nome, placa: string;
+  valor: currency): String;
+begin
+
+end;
+
+function TControllerVeiculo.Cadastrar(nome, placa: string;
+  valor: currency): String;
+begin
+
+end;
+
+function TControllerVeiculo.Consultar(id: integer; nome, placa: string): String;
+begin
+
+end;
+
+function TControllerVeiculo.Deletar(id: integer): String;
+begin
+
+end;
+
+end.

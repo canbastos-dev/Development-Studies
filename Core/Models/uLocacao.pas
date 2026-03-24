@@ -13,24 +13,32 @@ type
     FId: integer;
     FDataDevolucao: TDatetime;
     FVeiculo: TVeiculo;
+    FHash: string;
+    FVeiculoAtual: TVeiculo;
     procedure SetCliente(const Value: TCliente);
     procedure SetDataDevolucao(const Value: TDatetime);
     procedure SetDataLocacao(const Value: TDatetime);
     procedure SetId(const Value: integer);
     procedure SetTotal(const Value: currency);
     procedure SetVeiculo(const Value: TVeiculo);
+    procedure SetHash(const Value: string);
+    procedure SetVeiculoAtual(const Value: TVeiculo);
   published
 
     property Id : integer read FId write SetId;
     property Cliente  : TCliente read FCliente write SetCliente;
     property Veiculo  : TVeiculo read FVeiculo write SetVeiculo;
+    property VeiculoAtual  : TVeiculo read FVeiculoAtual write SetVeiculoAtual;
     property DataLocacao  : TDatetime read FDataLocacao write SetDataLocacao;
     property DataDevolucao  : TDatetime read FDataDevolucao write SetDataDevolucao;
     property Total  : currency read FTotal write SetTotal;
+    property Hash : string read FHash write SetHash;
 
     function CalcularTotal  : Currency;
 
     procedure ValidarRegrasNegocios;
+
+    constructor create;
 
   end;
 
@@ -56,6 +64,12 @@ begin
   Result  := total;
 end;
 
+constructor TLocacao.create;
+begin
+  // defin~ição de um hash code ja na criação do objeto, capturado no CADASTRAR da lcação
+  FHash :=  inttostr(self.GetHashCode);
+end;
+
 procedure TLocacao.SetCliente(const Value: TCliente);
 begin
   FCliente := Value;
@@ -71,6 +85,11 @@ begin
   FDataLocacao := Value;
 end;
 
+procedure TLocacao.SetHash(const Value: string);
+begin
+  FHash := Value;
+end;
+
 procedure TLocacao.SetId(const Value: integer);
 begin
   FId := Value;
@@ -84,6 +103,11 @@ end;
 procedure TLocacao.SetVeiculo(const Value: TVeiculo);
 begin
   FVeiculo := Value;
+end;
+
+procedure TLocacao.SetVeiculoAtual(const Value: TVeiculo);
+begin
+  FVeiculoAtual := Value;
 end;
 
 procedure TLocacao.ValidarRegrasNegocios;

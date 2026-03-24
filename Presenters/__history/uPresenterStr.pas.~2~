@@ -1,0 +1,35 @@
+unit uPresenterStr;
+
+interface
+uses uIPresenter, uCliente, uResponse, System.Generics.Collections,
+  System.SysUtils;
+
+type
+  TPresenterStr = class(TInterfacedObject, IPresenter)
+
+    function ConverterResponse(response :TResponse) : string;
+    function ConverterCliente(cliente :TCliente) : string;
+    function ConverterLista(lista :TList<TObject>) : string;
+
+  end;
+
+implementation
+
+{ TPresenterStr }
+
+function TPresenterStr.ConverterCliente(cliente: TCliente): string;
+begin
+
+end;
+
+function TPresenterStr.ConverterLista(lista: TList<TObject>): string;
+begin
+
+end;
+
+function TPresenterStr.ConverterResponse(response: TResponse): string;
+begin
+
+end;
+
+end.

@@ -1,0 +1,111 @@
+unit uLocacao;
+
+interface
+
+uses uCliente, uVeiculo, uExceptions, uEnums, System.DateUtils, System.SysUtils;
+
+type
+  TLocacao  = class
+  private
+    FCliente: TCliente;
+    FTotal: currency;
+    FDataLocacao: TDatetime;
+    FId: integer;
+    FDataDevolucao: TDatetime;
+    FVeiculo: TVeiculo;
+    procedure SetCliente(const Value: TCliente);
+    procedure SetDataDevolucao(const Value: TDatetime);
+    procedure SetDataLocacao(const Value: TDatetime);
+    procedure SetId(const Value: integer);
+    procedure SetTotal(const Value: currency);
+    procedure SetVeiculo(const Value: TVeiculo);
+  published
+
+    property Id : integer read FId write SetId;
+    property Cliente  : TCliente read FCliente write SetCliente;
+    property Veiculo  : TVeiculo read FVeiculo write SetVeiculo;
+    property DataLocacao  : TDatetime read FDataLocacao write SetDataLocacao;
+    property DataDevolucao  : TDatetime read FDataDevolucao write SetDataDevolucao;
+    property Total  : currency read FTotal write SetTotal;
+
+    function CalcularTotal  : Currency;
+
+    procedure ValidarRegrasNegocios;
+
+  end;
+
+implementation
+
+{ TLocacao }
+
+function TLocacao.CalcularTotal: Currency;
+var
+  total   : currency;
+  qtddias : Integer;
+begin
+  total   :=  0;
+  qtddias :=  1;
+  if (FDataLocacao <> strtodate('30/12/1899')) and
+  (FDataDevolucao <> strtodate('30/12/1899')) then
+  begin
+    qtddias :=  DaysBetween(FDataLocacao, FDataDevolucao);
+    if qtddias <= 0 then qtddias:=1;
+  end;
+
+  total := qtddias * FVeiculo.Valor;
+  Result  := total;
+end;
+
+procedure TLocacao.SetCliente(const Value: TCliente);
+begin
+  FCliente := Value;
+end;
+
+procedure TLocacao.SetDataDevolucao(const Value: TDatetime);
+begin
+  FDataDevolucao := Value;
+end;
+
+procedure TLocacao.SetDataLocacao(const Value: TDatetime);
+begin
+  FDataLocacao := Value;
+end;
+
+procedure TLocacao.SetId(const Value: integer);
+begin
+  FId := Value;
+end;
+
+procedure TLocacao.SetTotal(const Value: currency);
+begin
+  FTotal := Value;
+end;
+
+procedure TLocacao.SetVeiculo(const Value: TVeiculo);
+begin
+  FVeiculo := Value;
+end;
+
+procedure TLocacao.ValidarRegrasNegocios;
+begin
+  if FVeiculo = nil then  // veiculo não foi informado
+    //  tratamento com exceptions e devolvendo response
+    begin
+      ExceptionLocacaoVeiculo;
+    end;
+
+  if FCliente = nil then  // cliente não foi informado
+    //  tratamento com exceptions e devolvendo response
+    begin
+      ExceptionLocacaoCliente;
+    end;
+
+
+  if FVeiculo.Status  = sAlugado then
+  begin
+    ExceptionLocacaoVeiculoAlugado;
+  end;
+
+end;
+
+end.

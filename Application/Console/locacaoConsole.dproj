@@ -167,6 +167,10 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
+        <DCC_ExeOutput>.\</DCC_ExeOutput>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <Manifest_File>(None)</Manifest_File>
+        <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -179,6 +183,10 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="uMenuPrincipal.pas"/>
+        <DCCReference Include="..\Dados\uDados.pas">
+            <Form>dmDados</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
         <DCCReference Include="..\..\Core\Models\uCliente.pas"/>
         <DCCReference Include="..\..\Core\Ports\uICasoUsoCliente.pas"/>
         <DCCReference Include="..\..\Core\Response\uResponse.pas"/>
@@ -200,6 +208,14 @@
         <DCCReference Include="..\..\Repository\uRepositoryCliente.pas"/>
         <DCCReference Include="..\..\Core\Ports\uIRepositoryVeiculo.pas"/>
         <DCCReference Include="..\..\Repository\uRepositoryVeiculo.pas"/>
+        <DCCReference Include="..\..\Core\Ports\uIRepositoryLocacao.pas"/>
+        <DCCReference Include="..\..\Repository\uRepositoryLocacao.pas"/>
+        <DCCReference Include="..\..\Controller\uControllerCliente.pas"/>
+        <DCCReference Include="..\..\Controller\uControllerVeiculo.pas"/>
+        <DCCReference Include="..\..\Controller\uControllerLocacao.pas"/>
+        <DCCReference Include="..\..\Presenters\uIPresenter.pas"/>
+        <DCCReference Include="..\..\Presenters\uPresenterStr.pas"/>
+        <DCCReference Include="..\..\Presenters\uPresenterJSon.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -220,6 +236,10 @@
                 <Source>
                     <Source Name="MainSource">locacaoConsole.dpr</Source>
                 </Source>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k290.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp290.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="4">
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule">
@@ -237,7 +257,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win32\Debug\locacaoConsole.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="locacaoConsole.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>locacaoConsole.exe</RemoteName>
                         <Overwrite>true</Overwrite>

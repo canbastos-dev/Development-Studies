@@ -1,0 +1,73 @@
+unit uControllerCliente;
+
+interface
+uses  uIRepositoryCliente, uCasoUsoCliente, uICasoUsoCliente, uResponse,
+  uDTOCliente, uCliente, uEnums;
+
+type
+  TControllerCliente  = class
+  private
+    FCasoUso: ICasoUsoCliente;
+    procedure SetCasoUso(const Value: ICasoUsoCliente);
+  published
+
+  function cadastrar(nome, documento, cep, logradouro, complemento, bairro,
+    cidade, uf, telefone  : string)  : string;
+
+  function alterar(id : integer; nome, documento, cep, logradouro, complemento, bairro,
+    cidade, uf, telefone  : string)  : string;
+
+  function Deletar(id : integer)  : string;
+  function Consultar(id :integer; nome, documento : string)  : string;
+
+  property  CasoUso : ICasoUsoCliente read FCasoUso write SetCasoUso;
+
+  constructor create(repository : IRepositoryCliente);
+  destructor  destroy;override;
+
+  end;
+
+implementation
+
+{ TControllerCliente }
+
+function TControllerCliente.alterar(id: integer; nome, documento, cep,
+  logradouro, complemento, bairro, cidade, uf, telefone: string): string;
+begin
+
+end;
+
+function TControllerCliente.cadastrar(nome, documento, cep, logradouro,
+  complemento, bairro, cidade, uf, telefone: string): string;
+begin
+
+end;
+
+function TControllerCliente.Consultar(id: integer; nome,
+  documento: string): string;
+begin
+
+end;
+
+constructor TControllerCliente.create(repository: IRepositoryCliente);
+begin
+  CasoUso := TCasoUsoCliente.create(repository);
+end;
+
+function TControllerCliente.Deletar(id: integer): string;
+begin
+
+end;
+
+destructor TControllerCliente.destroy;
+begin
+
+  inherited;
+end;
+
+procedure TControllerCliente.SetCasoUso(const Value: ICasoUsoCliente);
+begin
+  FCasoUso := Value;
+end;
+
+end.

@@ -6,7 +6,7 @@ uses uVeiculo, uICasoUsoVeiculo, uDTOVeiculo, uResponse, uExceptions, uEnums, uU
   System.SysUtils,System.Generics.Collections, uIRepositoryVeiculo;
 
 type
-  TCasoUsoVeiculo = class
+  TCasoUsoVeiculo = class(TInterfacedObject, ICasoUsoVeiculo)
   private
     FRepository : IRepositoryVeiculo;
     FListaObjeto: TList<TObject>;
@@ -158,7 +158,7 @@ constructor TCasoUsoVeiculo.create(repository: IRepositoryVeiculo);
 begin
   FRepository :=  repository;
   Lista :=  TList<TVeiculo>.Create;
-  ListaObjeto  := TList<TObject>.Create;
+  ListaObjeto   := TList<TObject>.Create;
 end;
 
 destructor TCasoUsoVeiculo.destroy;

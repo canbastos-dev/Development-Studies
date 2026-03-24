@@ -1,0 +1,68 @@
+unit uControllerVeiculo;
+
+interface
+
+uses uVeiculo, uDtoVeiculo, uResponse, uIRepositoryVeiculo, uEnums, uICasoUsoVeiculo,
+  uCasoUsoVeiculo;
+
+type
+  TControllerVeiculo  = class
+  private
+    Fcasouso: ICasoUsoVeiculo;
+    procedure Setcasouso(const Value: ICasoUsoVeiculo);
+  published
+
+    function Cadastrar(nome, placa  :string;  valor :currency): String;
+    function Alterar(id :integer; nome, placa  :string;  valor :currency): String;
+    function Deletar(id :integer): String;
+    function Consultar(id :integer; nome, placa  :string): String;
+    property casouso  : ICasoUsoVeiculo read Fcasouso write Setcasouso;
+ 
+    constructor create(repository : IRepositoryVeiculo);
+    destructor destroy;override;
+ 
+  end;
+
+implementation
+
+{ TControllerVeiculo }
+
+function TControllerVeiculo.Alterar(id: integer; nome, placa: string;
+  valor: currency): String;
+begin
+
+end;
+
+function TControllerVeiculo.Cadastrar(nome, placa: string;
+  valor: currency): String;
+begin
+
+end;
+
+function TControllerVeiculo.Consultar(id: integer; nome, placa: string): String;
+begin
+
+end;
+
+constructor TControllerVeiculo.create(repository: IRepositoryVeiculo);
+begin
+  CasoUso :=  TCasoUsoVeiculo.create(repository);
+end;
+  
+function TControllerVeiculo.Deletar(id: integer): String;
+begin
+
+end;
+
+destructor TControllerVeiculo.destroy;
+begin
+
+  inherited;
+end;
+
+procedure TControllerVeiculo.Setcasouso(const Value: ICasoUsoVeiculo);
+begin
+  Fcasouso := Value;
+end;
+
+end.

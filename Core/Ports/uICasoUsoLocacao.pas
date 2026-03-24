@@ -9,7 +9,7 @@ type
 
     function Cadastrar(locacao  : TLocacao): TResponse;
     function Alterar(locacao  : TLocacao):  TResponse;
-    function Consultar(dto : TDtoLocacao)  : TResponse;
+    function Consultar(dto : DtoLocacao)  : TResponse;
     function Deletar(id : integer)  : TResponse;
 
   end;

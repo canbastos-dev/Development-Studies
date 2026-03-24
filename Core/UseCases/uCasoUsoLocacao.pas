@@ -3,17 +3,30 @@ unit uCasoUsoLocacao;
 interface
 
 uses uICasoUsoLocacao, uResponse, uLocacao, uDtoLocacao, uEnums, uUtils,
-System.SysUtils, uExceptions;
+System.SysUtils, uExceptions, System.Generics.Collections,uIRepositoryLocacao;
 
 type
   TCasoUsoLocacao = class(TInterfacedObject, ICasoUsoLocacao)
+  private
+    FRepository : IRepositoryLocacao;
+    FLista: TList<TLocacao>;
+    FListaObjeto: TList<TObject>;
+    procedure SetLista(const Value: TList<TLocacao>);
+    procedure SetListaObjeto(const Value: TList<TObject>);
+  published
 
     function Cadastrar(locacao  : TLocacao): TResponse;
     function Alterar(locacao  : TLocacao):  TResponse;
-    function Consultar(dto : TDtoLocacao)  : TResponse;
+    function Consultar(dto : DtoLocacao)  : TResponse;
     function Deletar(id : integer)  : TResponse;
 
     procedure ValidarId(id  : integer);
+
+    property Lista  : TList<TLocacao> read FLista write SetLista;
+    property ListaObjeto  :  TList<TObject> read FListaObjeto write SetListaObjeto;
+
+    constructor create(repository  : IRepositoryLocacao);
+    destructor  destroy;override;
 
   end;
 
@@ -29,6 +42,8 @@ begin
   try
 
     locacao.ValidarRegrasNegocios;
+
+    FRepository.Alterar(locacao);
 
     response.success    :=  True;
     response.ErrorCode  :=  0;
@@ -55,6 +70,9 @@ begin
 
     locacao.ValidarRegrasNegocios;
 
+    locacao.DataLocacao :=  now();
+    FRepository.Cadastrar(locacao);
+
     response.success    :=  True;
     response.ErrorCode  :=  0;
     response.Message    := RetornaMsgResponse.CADASTRADO_COM_SUCESSO;
@@ -71,16 +89,28 @@ begin
   result := response;
 end;
 
-function TCasoUsoLocacao.Consultar(dto: TDtoLocacao): TResponse;
+function TCasoUsoLocacao.Consultar(dto: DtoLocacao): TResponse;
 var
   response  : TResponse;
 begin
 
   try
-    response.success    :=  True;
-    response.ErrorCode  :=  0;
-    response.Message    := RetornaMsgResponse.CONSULTA_REALIZADA_COM_SUCESSO;
-    response.Data       := nil;
+    ListaObjeto.Clear;
+    Lista :=  FRepository.Consultar(dto);
+
+    if Lista.Count  > 0 then begin
+      response.success    :=  True;
+      response.ErrorCode  :=  0;
+      response.Message    := RetornaMsgResponse.CONSULTA_REALIZADA_COM_SUCESSO;
+      response.Data       := ListaLocacaoParaListaObjeto(ListaObjeto, Lista);
+
+    end else begin
+      response.success    :=  True;
+      response.ErrorCode  :=  0;
+      response.Message    := RetornaMsgResponse.CONSULTA_REALIZADA_SEM_RETORNO;
+      response.Data       := nil;
+
+    end;
 
   Except
     on e: Exception do
@@ -93,6 +123,13 @@ begin
   result := response;
 end;
 
+constructor TCasoUsoLocacao.create(repository: IRepositoryLocacao);
+begin
+  FRepository :=  repository;
+  Lista :=  TList<TLocacao>.Create;
+  ListaObjeto  := TList<TObject>.Create;
+end;
+
 function TCasoUsoLocacao.Deletar(id: integer): TResponse;
 var
   response  : TResponse;
@@ -101,6 +138,8 @@ begin
   try
 
     validarId(id);
+
+    FRepository.Excluir(id);
 
     response.success    :=  True;
     response.ErrorCode  :=  0;
@@ -116,6 +155,23 @@ begin
   end;
 
   result := response;
+end;
+
+destructor TCasoUsoLocacao.destroy;
+begin
+  Lista.free;
+  ListaObjeto.free;
+  inherited;
+end;
+
+procedure TCasoUsoLocacao.SetLista(const Value: TList<TLocacao>);
+begin
+  FLista := Value;
+end;
+
+procedure TCasoUsoLocacao.SetListaObjeto(const Value: TList<TObject>);
+begin
+  FListaObjeto := Value;
 end;
 
 procedure TCasoUsoLocacao.ValidarId(id: integer);

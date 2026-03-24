@@ -3,7 +3,7 @@ unit uDTOLocacao;
 interface
 
 type
-  TDtoLocacao = record
+  DtoLocacao = record
     id            : integer;
     idcliente     : integer;
     datalocacao   : Tdatetime;

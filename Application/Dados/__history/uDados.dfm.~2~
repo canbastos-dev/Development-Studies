@@ -1,0 +1,16 @@
+object dmDados: TdmDados
+  Height = 283
+  Width = 622
+  object Conn_Locacao: TFDConnection
+    Left = 104
+    Top = 40
+  end
+  object FDPhysPgDriverLink1: TFDPhysPgDriverLink
+    VendorHome = 'C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Bin'
+    VendorLib = 
+      'C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Bin' +
+      '\libpq.dll'
+    Left = 248
+    Top = 40
+  end
+end

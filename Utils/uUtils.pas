@@ -3,7 +3,7 @@
 interface
 
 uses System.SysUtils, uResponse, uExceptions, uEnums, uCliente,
-      system.Generics.Collections, typinfo, uVeiculo;
+      system.Generics.Collections, typinfo, uVeiculo, uLocacao;
 
 function TratarException(e : Exception) : TResponse;
 
@@ -12,6 +12,9 @@ listaCliente  : TList<TCliente>)  : TList<TObject>;
 
 function ListaVeiculoParaListaObjeto(listaObjeto  : TList<TObject>;
 listaVeiculo  : TList<TVeiculo>)  : TList<TObject>;
+
+function ListaLocacaoParaListaObjeto(listaObjeto  : TList<TObject>;
+listaLocacao  : TList<TLocacao>)  : TList<TObject>;
 
 function ConverteStatusString(value  :  Status)  : string;
 
@@ -53,6 +56,21 @@ begin
   if listaVeiculo.Count > 0 then begin
     for veiculo in listaVeiculo do begin
       listaObjeto.Add(veiculo);
+    end;
+
+  end;
+  result  :=  listaObjeto;
+end;
+
+function ListaLocacaoParaListaObjeto(listaObjeto  : TList<TObject>;
+listaLocacao  : TList<TLocacao>)  : TList<TObject>;
+var
+  locacao : TLocacao;
+begin
+
+  if listaLocacao.Count > 0 then begin
+    for locacao in listaLocacao do begin
+      listaObjeto.Add(locacao);
     end;
 
   end;

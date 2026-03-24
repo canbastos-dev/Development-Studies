@@ -2,7 +2,7 @@ unit uMenuPrincipal;
 
 interface
 
-uses winapi.Windows,  System.SysUtils;
+uses winapi.Windows,  System.SysUtils, uDados;
 
 procedure Menu;
 procedure MenuCliente;
@@ -59,7 +59,6 @@ begin
 
 end;
 
-
 procedure Menu;
 var
   codigo  : integer;
@@ -77,7 +76,10 @@ begin
               '3 - Locações'  + #13#10;
 
   writeln(modulo);
-  writeln(Output, 'Opção:');
+//  if dmDados.Conn_Locacao.Connected then
+    writeln(Output, 'Opção Conectado:');
+//  else
+//    writeln(Output, 'Opção NAO Conectado:');
   readln(Input,codigo);
 
   case codigo of
@@ -286,7 +288,5 @@ begin
   readln;
   Menu;
 end;
-
-
 
 end.

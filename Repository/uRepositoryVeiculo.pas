@@ -10,7 +10,7 @@ type
   TRepositoryVeiculo  = class(TInterfacedObject, IRepositoryVeiculo)
   private
     FLista: TList<TVeiculo>;
-    ConfiguraçãoDB  : TConfiguracaoBD;
+    ConfiguracaoDB  : TConfiguracaoBD;
     procedure SetLista(const Value: TList<TVeiculo>);
   published
 
@@ -42,7 +42,7 @@ begin
           'status = ' + QuotedStr(ConverteStatusString(veiculo.status)) +
           'where id = ' + IntToStr(veiculo.id);
 
-          ConfiguraçãoDB.ExecSql(sql);
+          ConfiguracaoDB.ExecSql(sql);
 end;
 
 procedure TRepositoryVeiculo.Cadastrar(veiculo: TVeiculo);
@@ -57,7 +57,7 @@ begin
           StringReplace(CurrToStr(veiculo.valor),',','.',[])  +  ',' +
           QuotedStr(ConverteStatusString(veiculo.status))  +  ')' ;
 
-          ConfiguraçãoDB.ExecSql(sql);
+          ConfiguracaoDB.ExecSql(sql);
 end;
 
 function TRepositoryVeiculo.Consultar(dto: DtoVeiculo): TList<TVeiculo>;
@@ -80,9 +80,9 @@ begin
     end;
   end;
 
-  if ConfiguraçãoDB.Consulta(sql) then begin
+  if ConfiguracaoDB.Consulta(sql) then begin
     Lista.clear;
-    with ConfiguraçãoDB do begin
+    with ConfiguracaoDB do begin
       Query.First;
       while not Query.Eof do
         veiculo              :=  TVeiculo.Create;
@@ -104,14 +104,14 @@ end;
 constructor TRepositoryVeiculo.create;
 begin
   Lista :=  TList<TVeiculo>.Create;
-  ConfiguraçãoDB  := TConfiguracaoBD.Create;
+  ConfiguracaoDB  := TConfiguracaoBD.Create;
 
 end;
 
 destructor TRepositoryVeiculo.destroy;
 begin
   Lista.Free;
-  ConfiguraçãoDB.Free;
+  ConfiguracaoDB.Free;
   inherited;
 end;
 
@@ -121,7 +121,7 @@ var
 begin
 
   sql :=  'delete from veiculos where id  = ' + IntToStr(id);
-  ConfiguraçãoDB.ExecSql(sql);
+  ConfiguracaoDB.ExecSql(sql);
 end;
 
 procedure TRepositoryVeiculo.SetLista(const Value: TList<TVeiculo>);

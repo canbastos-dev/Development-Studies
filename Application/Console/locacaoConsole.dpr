@@ -7,6 +7,7 @@ program locacaoConsole;
 uses
   System.SysUtils,
   uMenuPrincipal in 'uMenuPrincipal.pas',
+  uDados in '..\Dados\uDados.pas' {dmDados: TDataModule},
   uCliente in '..\..\Core\Models\uCliente.pas',
   uICasoUsoCliente in '..\..\Core\Ports\uICasoUsoCliente.pas',
   uResponse in '..\..\Core\Response\uResponse.pas',
@@ -27,7 +28,15 @@ uses
   uConfiguracaoBD_pg in '..\..\Repository\uConfiguracaoBD_pg.pas',
   uRepositoryCliente in '..\..\Repository\uRepositoryCliente.pas',
   uIRepositoryVeiculo in '..\..\Core\Ports\uIRepositoryVeiculo.pas',
-  uRepositoryVeiculo in '..\..\Repository\uRepositoryVeiculo.pas';
+  uRepositoryVeiculo in '..\..\Repository\uRepositoryVeiculo.pas',
+  uIRepositoryLocacao in '..\..\Core\Ports\uIRepositoryLocacao.pas',
+  uRepositoryLocacao in '..\..\Repository\uRepositoryLocacao.pas',
+  uControllerCliente in '..\..\Controller\uControllerCliente.pas',
+  uControllerVeiculo in '..\..\Controller\uControllerVeiculo.pas',
+  uControllerLocacao in '..\..\Controller\uControllerLocacao.pas',
+  uIPresenter in '..\..\Presenters\uIPresenter.pas',
+  uPresenterStr in '..\..\Presenters\uPresenterStr.pas',
+  uPresenterJSon in '..\..\Presenters\uPresenterJSon.pas';
 
 begin
   try
