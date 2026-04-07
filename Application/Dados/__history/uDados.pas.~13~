@@ -1,0 +1,54 @@
+unit uDados;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.ConsoleUI.Wait,
+  FireDAC.Phys.PGDef, FireDAC.Phys.PG, Data.DB, FireDAC.Comp.Client,
+  FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt,
+  FireDAC.Comp.DataSet, FireDAC.VCLUI.Wait;
+
+//FireDAC.VCLUI.Wait,
+
+type
+  TdmDados = class(TDataModule)
+    Conn_Locacao: TFDConnection;
+    FDPhysPgDriverLink1: TFDPhysPgDriverLink;
+    procedure DataModuleCreate(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  procedure Conectar;
+  end;
+
+var
+  dmDados: TdmDados;
+
+implementation
+
+procedure TdmDados.Conectar;
+  begin
+     Conn_Locacao.Params.Clear;
+     Conn_Locacao.Params.Add('DriverID=PG');
+     Conn_Locacao.Params.Add('Server=localhost');
+     Conn_Locacao.Params.Add('Port=5432');
+     Conn_Locacao.Params.Add('Database=Locacao');
+     Conn_Locacao.Params.Add('User_Name=postgres');
+     Conn_Locacao.Params.Add('Password=boss0700');
+     Conn_Locacao.Params.Add('CharacterSet=UTF8');
+     Conn_Locacao.Connected := True;
+   end;
+
+{%CLASSGROUP 'System.Classes.TPersistent'}
+
+{$R *.dfm}
+
+procedure TdmDados.DataModuleCreate(Sender: TObject);
+begin
+    dmDados.Conectar;
+end;
+
+end.

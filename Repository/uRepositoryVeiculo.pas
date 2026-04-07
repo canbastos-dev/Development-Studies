@@ -35,7 +35,7 @@ var
   sql : string;
 begin
 
-  sql :=  'update veiculos set '  +
+  sql :=  'update Veiculo set '  +
           'nome = ' + QuotedStr(veiculo.Nome) + ',' +
           'placa  = ' + QuotedStr(veiculo.Placa)  + ',' +
           'valor  = ' + StringReplace(CurrToStr(veiculo.valor),',','.',[])  + ',' +
@@ -50,7 +50,7 @@ var
   sql : string;
 begin
 
-  sql :=  'insert into Veiculo (nome, placa, valor, status'+
+  sql :=  'insert into Veiculo (nome, placa, valor, status) '+
           'values ('+
           QuotedStr(veiculo.Nome)  +  ',' +
           QuotedStr(veiculo.placa)  +  ',' +
@@ -66,7 +66,7 @@ var
   veiculo : TVeiculo;
 begin
 
-  sql :=  'select * from veiculos where 1 = 1';
+  sql :=  'select * from Veiculo where 1 = 1';
 
   if dto.id > 0 then begin
     sql :=  sql + ' and id = ' + IntToStr(dto.id);
@@ -84,28 +84,24 @@ begin
     Lista.clear;
     with ConfiguracaoDB do begin
       Query.First;
-      while not Query.Eof do
+      while not Query.Eof do begin
         veiculo              :=  TVeiculo.Create;
         veiculo.Id           :=  Query.FieldByName('id').AsInteger;
         veiculo.Nome         :=  Query.FieldByName('nome').AsString;
         veiculo.placa        :=  Query.FieldByName('placa').AsString;
         veiculo.status       :=  ConverteStrStatus(Query.FieldByName('status').AsString);
-
         Lista.Add(veiculo);
-
+        Query.Next;
+      end;
     end;
-
   end;
-
   result  :=  Lista;
-
 end;
 
 constructor TRepositoryVeiculo.create;
 begin
   Lista :=  TList<TVeiculo>.Create;
   ConfiguracaoDB  := TConfiguracaoBD.Create;
-
 end;
 
 destructor TRepositoryVeiculo.destroy;
@@ -119,8 +115,7 @@ procedure TRepositoryVeiculo.Excluir(id: integer);
 var
   sql : String;
 begin
-
-  sql :=  'delete from veiculos where id  = ' + IntToStr(id);
+  sql :=  'delete from Veiculo where id  = ' + IntToStr(id);
   ConfiguracaoDB.ExecSql(sql);
 end;
 

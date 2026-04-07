@@ -6,9 +6,11 @@ uses
   System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.ConsoleUI.Wait,
-  FireDAC.Phys.PGDef, FireDAC.Phys.PG, Data.DB, FireDAC.Comp.Client,FireDAC.VCLUI.Wait,
+  FireDAC.Phys.PGDef, FireDAC.Phys.PG, Data.DB, FireDAC.Comp.Client,
   FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt,
-  FireDAC.Comp.DataSet ;
+  FireDAC.Comp.DataSet, FireDAC.VCLUI.Wait;
+
+//FireDAC.VCLUI.Wait,
 
 type
   TdmDados = class(TDataModule)
@@ -33,7 +35,7 @@ procedure TdmDados.Conectar;
      Conn_Locacao.Params.Add('DriverID=PG');
      Conn_Locacao.Params.Add('Server=localhost');
      Conn_Locacao.Params.Add('Port=5432');
-     Conn_Locacao.Params.Add('Database=locacao');
+     Conn_Locacao.Params.Add('Database=Locacao');
      Conn_Locacao.Params.Add('User_Name=postgres');
      Conn_Locacao.Params.Add('Password=boss2409');
      Conn_Locacao.Params.Add('CharacterSet=UTF8');

@@ -1,8 +1,24 @@
-unit uMenuPrincipal;
+ï»¿unit uMenuPrincipal;
 
 interface
 
-uses winapi.Windows,  System.SysUtils, uDados;
+uses winapi.Windows,  System.SysUtils, uDados, uIRepositoryCliente, uIRepositoryVeiculo, uIRepositoryLocacao, uRepositoryCliente,
+  uRepositoryVeiculo, uRepositoryLocacao, uControllerCliente, uControllerVeiculo,
+  uControllerLocacao, uIPresenter, uPresenterStr, System.DateUtils;
+
+procedure InjecaoDependencia;
+procedure Finalizar;
+
+var
+  ControllerCliente : TControllerCliente;
+  ControllerVeiculo : TControllerVeiculo;
+  ControllerLocacao : TControllerLocacao;
+
+  repositoryCliente : IRepositoryCliente;
+  repositoryVeiculo : IRepositoryVeiculo;
+  repositoryLocacao : IRepositoryLocacao;
+
+  presenter         : IPresenter;
 
 procedure Menu;
 procedure MenuCliente;
@@ -22,17 +38,41 @@ procedure ExcluirLocacoes;
 procedure ConsultarLocacoes;
 procedure clean;
 
-// função para reutilizar codigo relativo as opçoes compartilhadas entre os menus
-// essa RETORNA um valor, que são exatamente as opções
+// funÃ§Ã£o para reutilizar codigo relativo as opÃ§oes compartilhadas entre os menus
+// essa RETORNA um valor, que sÃ£o exatamente as opÃ§Ãµes
 function Modulos  : string;
 
 implementation
+
+procedure Finalizar;
+begin
+  ControllerCliente.free;
+  ControllerVeiculo.free;
+  ControllerLocacao.free;
+end;
+
+procedure InjecaoDependencia;
+begin
+//  dmDados := TdmDados.Create(nil); // â† cria e jÃ¡ dispara DataModuleCreateâ†’Conectar
+
+  presenter         :=  TPresenterStr.Create;
+
+  repositoryCliente :=  TRepositoryCliente.create;
+  repositoryVeiculo :=  TRepositoryVeiculo.create;
+  repositoryLocacao :=  TRepositoryLocacao.create(repositoryCliente, repositoryVeiculo);
+
+  ControllerCliente :=  TControllerCliente.create(repositoryCliente, presenter);
+  ControllerVeiculo :=  TControllerVeiculo.create(repositoryVeiculo, presenter);
+  ControllerLocacao :=  TControllerLocacao.create(repositoryLocacao, repositoryVeiculo,
+    repositoryCliente, presenter);
+
+end;
 
 function Modulos  : string;
 begin
   Result  :=  '1 - Cadastrar '  + #13#10 +
               '2 - Alterar'     + #13#10 +
-              '3 - Editar'      + #13#10 +
+              '3 - Excluit'     + #13#10 +
               '4 - Consultar'   + #13#10 +
               '5 - Voltar'      + #13#10;
 end;
@@ -61,38 +101,46 @@ end;
 
 procedure Menu;
 var
-  codigo  : integer;
+//  codigo  : integer;
   entrada : string;
   modulo  : string;
+  opcao   : integer;
 begin
+
+  repeat
 
   clean;
 
-  writeln('Menu de opções');
+  writeln('Menu de opÃ§Ãµes');
   writeln;
 
   modulo  :=  '1 - Clientes'  + #13#10 +
               '2 - Veiculos'  + #13#10 +
-              '3 - Locações'  + #13#10;
+              '3 - LocaÃ§Ãµes'  + #13#10 +
+              '0 - Sair'      + #13#10 ;
 
   writeln(modulo);
 //  if dmDados.Conn_Locacao.Connected then
-    writeln(Output, 'Opção Conectado:');
+    writeln(Output, 'OpÃ§Ã£o:');
 //  else
-//    writeln(Output, 'Opção NAO Conectado:');
-  readln(Input,codigo);
+//    writeln(Output, 'OpÃ§Ã£o NAO Conectado:');
+  readln(Input,opcao);
 
-  case codigo of
+  case opcao of
     1 : MenuCliente;
     2 : MenuVeiculos;
     3 : MenuLocacoes;
     else
     begin
-      writeln('Opção invalida');
-      readln;
-      Menu;
+      if opcao >  0 then begin
+        writeln('OpÃ§Ã£o invalida');
+        readln;
+      end;
+//      Menu;
     end;
   end;
+
+  until opcao = 0;
 
 end;
 
@@ -109,7 +157,7 @@ begin
   writeln;
 
   writeln(Modulos);
-  writeln(Output, 'Opção:');
+  writeln(Output, 'OpÃ§Ã£o:');
   readln(Input,codigo);
 
 
@@ -121,43 +169,132 @@ begin
     5 : Menu
     else
       begin
-        writeln('Opção invalida');
+        writeln('OpÃ§Ã£o invalida');
         readln;
-        Menu;
+//        Menu;
       end;
   end;
 end;
 
 procedure CadastrarCliente;
+var
+  nome, documento, cep, logradouro, complemento, bairro, cidade, uf,
+  telefone, response  : string;
 begin
   clean;
   writeln('Cadastro de Cliente');
+  writeln;
+
+  write(output,'Nome: ');
+  readln(input, nome);
+  write(output,'Documento: ');
+  readln(input, documento);
+  write(output,'Cep: ');
+  readln(input, Cep);
+  write(output,'Logradouro: ');
+  readln(input, logradouro);
+  write(output,'Complemento: ');
+  readln(input, complemento);
+  write(output,'Bairro: ');
+  readln(input, bairro);
+  write(output,'Cidade: ');
+  readln(input, cidade);
+  write(output,'UF: ');
+  readln(input, uf);
+  write(output,'Telefone: ');
+  readln(input, telefone);
+
+  response  :=  ControllerCliente.Cadastrar(nome, documento, cep, logradouro,
+  complemento, bairro, cidade, uf, telefone);
+
+  writeln(response);
   readln;
-  Menu;
+//  Menu;
 end;
 
 procedure AlterarCliente;
+var
+  idcliente : integer;
+  nome, documento, cep, logradouro, complemento, bairro, cidade, uf,
+  telefone, response  : string;
 begin
   clean;
   writeln('Alterar Cliente');
+  writeln;
+
+  write(output,'Id: ');
+  readln(input, idcliente);
+
+  write(output,'Nome: ');
+  readln(input, nome);
+  write(output,'Documento: ');
+  readln(input, documento);
+  write(output,'Cep: ');
+  readln(input, Cep);
+  write(output,'Logradouro: ');
+  readln(input, logradouro);
+  write(output,'Complemento: ');
+  readln(input, complemento);
+  write(output,'Bairro: ');
+  readln(input, bairro);
+  write(output,'Cidade: ');
+  readln(input, cidade);
+  write(output,'UF: ');
+  readln(input, uf);
+  write(output,'Telefone: ');
+  readln(input, telefone);
+
+  response  :=  ControllerCliente.Alterar(idcliente, nome, documento, cep, logradouro,
+  complemento, bairro, cidade, uf, telefone);
+
+  clean;
+  writeln(response);
   readln;
-  Menu;
+//  Menu;
 end;
 
 procedure ExcluirCliente;
+var
+  idcliente : integer;
+  response  :string;
 begin
   clean;
   writeln('Excluir Cliente');
+  writeln;
+  write(output,'Id: ');
+  readln(input, idcliente);
+
+  response  := ControllerCliente.Deletar(idcliente);
+
+  clean;
+  writeln(response);
   readln;
-  Menu;
+//  Menu;
 end;
 
 procedure ConsultarCliente;
+var
+  id  : integer;
+  nome, documento, response :string;
+
 begin
   clean;
   writeln('Consultar Cliente');
+  writeln;
+
+  write(output,'Id: ');
+  readln(input, id);
+  write(output,'Nome: ');
+  readln(input, nome);
+  write(output,'Documento: ');
+  readln(input, documento);
+
+  response  := ControllerCliente.Consultar(id, nome, documento);
+
+  clean;
+  writeln(response);
   readln;
-  Menu;
+//  Menu;
 end;
 
 // Menu Veiculos
@@ -173,7 +310,7 @@ begin
   writeln;
 
   writeln(Modulos);
-  writeln(Output, 'Opção:');
+  writeln(Output, 'OpÃ§Ã£o:');
   readln(Input,codigo);
 
 
@@ -185,47 +322,109 @@ begin
     5 : Menu
     else
       begin
-        writeln('Opção invalida');
+        writeln('OpÃ§Ã£o invalida');
         readln;
-        Menu;
+//        Menu;
       end;
   end;
 end;
 
 procedure CadastrarVeiculo;
+var
+  nome, placa, response : string;
+  valor                 : currency;
+
 begin
   clean;
   writeln('Cadastro de Veiculos');
   readln;
-  Menu;
+  write(output,'Nome: ');
+  readln(input, nome);
+  write(output,'Placa: ');
+  readln(input, placa);
+  write(output,'Valor: ');
+  readln(input, valor);
+
+  response  := ControllerVeiculo.Cadastrar(nome, placa, valor);
+
+  clean;
+  writeln(response);
+  readln;
+//  Menu;
 end;
 
 procedure AlterarVeiculo;
+var
+  nome, placa, status, response : string;
+  valor                         : currency;
+  id                            : integer;
 begin
   clean;
   writeln('Alterar Veiculo');
   readln;
-  Menu;
+  write(output,'Id: ');
+  readln(input, id);
+  write(output,'Nome: ');
+  readln(input, nome);
+  write(output,'Placa: ');
+  readln(input, placa);
+  write(output,'Status: ');
+  readln(input, status);
+  write(output,'Valor: ');
+  readln(input, valor);
+
+  response  := ControllerVeiculo.Alterar(id, nome, placa, status, valor);
+
+  clean;
+  writeln(response);
+  readln;
+//  Menu;
 end;
 
 procedure ExcluirVeiculo;
+var
+  response  : string;
+  id        : integer;
 begin
   clean;
   writeln('Excluir Veiculo');
+  writeln;
+  write(output,'Id: ');
+  readln(input, id);
+
+  response  := ControllerVeiculo.Deletar(id);
+
+  clean;
+  writeln(response);
   readln;
-  Menu;
+//  Menu;
 end;
 
 procedure ConsultarVeiculo;
+var
+  nome, placa, response : string;
+  id                    : integer;
 begin
   clean;
   writeln('Consultar Veiculo');
   readln;
-  Menu;
+  write(output,'Id: ');
+  readln(input, id);
+  write(output,'Nome: ');
+  readln(input, nome);
+  write(output,'Placa: ');
+
+  response  := ControllerVeiculo.Consultar(id, nome, placa);
+
+  clean;
+  writeln(response);
+  readln;
+
+//  Menu;
 end;
 
 
-// Menu Locações
+// Menu LocaÃ§Ãµes
 procedure MenuLocacoes;
 var
   codigo  : integer;
@@ -234,11 +433,11 @@ begin
 
   clean;
 
-  writeln('Menu de Locações');
+  writeln('Menu de LocaÃ§Ãµes');
   writeln;
 
   writeln(Modulos);
-  writeln(Output, 'Opção:');
+  writeln(Output, 'OpÃ§Ã£o:');
   readln(Input,codigo);
 
 
@@ -250,9 +449,9 @@ begin
     5 : Menu
     else
       begin
-        writeln('Opção invalida');
+        writeln('OpÃ§Ã£o invalida');
         readln;
-        Menu;
+  //      Menu;
       end;
   end;
 end;
@@ -260,33 +459,33 @@ end;
 procedure CadastrarLocacoes;
 begin
   clean;
-  writeln('Cadastro de Locações');
+  writeln('Cadastro de LocaÃ§Ãµes');
   readln;
-  Menu;
+//  Menu;
 end;
 
 procedure AlterarLocacoes;
 begin
   clean;
-  writeln('Alterar Locações');
+  writeln('Alterar LocaÃ§Ãµes');
   readln;
-  Menu;
+//  Menu;
 end;
 
 procedure ExcluirLocacoes;
 begin
   clean;
-  writeln('Excluir Locações');
+  writeln('Excluir LocaÃ§Ãµes');
   readln;
-  Menu;
+//  Menu;
 end;
 
 procedure ConsultarLocacoes;
 begin
   clean;
-  writeln('Consultar Locações');
+  writeln('Consultar LocaÃ§Ãµes');
   readln;
-  Menu;
+//  Menu;
 end;
 
 end.

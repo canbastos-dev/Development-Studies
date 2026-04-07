@@ -1,0 +1,129 @@
+unit uConfiguracaoBD_pg;
+
+interface
+
+uses
+  FireDAC.Comp.Client,
+  FireDAC.Phys.PG,           // Driver PostgreSQL (substitui FireDAC.Phys.MSSQL)
+  FireDAC.Phys.PGDef,        // Definições do driver PG
+  IniFiles,
+  System.SysUtils,  data.DB,
+  uExceptions;
+
+type
+  TConfiguracaoBD = class
+  private
+    FConnection          : TFDConnection;
+    FDPhysPGDriverLink   : TFDPhysPgDriverLink;  // DriverLink para PostgreSQL
+    FQuery               : TFDQuery;
+    procedure SetQuery(const Value: TFDQuery);
+  published
+    function  Conexao: TFDConnection;
+    procedure ExecSql(sql: string);
+    function  Consulta(sql: string): Boolean;
+    property  Query: TFDQuery read FQuery write SetQuery;
+
+    constructor Create;
+    destructor  Destroy; override;
+  end;
+
+implementation
+
+{ TConfiguracaoBD }
+
+function TConfiguracaoBD.Conexao: TFDConnection;
+begin
+  Result := FConnection;
+end;
+
+function TConfiguracaoBD.Consulta(sql: string): Boolean;
+begin
+  Result := False;
+  try
+    FQuery.SQL.Clear;
+    FQuery.SQL.Add(sql);
+    FQuery.Open;
+    Result := not FQuery.IsEmpty;
+  except
+    on E: Exception do
+      ExceptionDatabase(E.Message);
+  end;
+end;
+
+constructor TConfiguracaoBD.Create;
+var
+  diretorio, server, port, user, database, password: string;
+  arquivoini: TIniFile;
+begin
+  // Leitura do arquivo INI
+  // Nota: usar GetCurrentDir pode retornar diretório diferente em runtime;
+  // considere usar ExtractFilePath(ParamStr(0)) para garantir o diretório do executável.
+  diretorio  := ExtractFilePath(ParamStr(0));
+  arquivoini := TIniFile.Create(diretorio + 'configuracao.ini');
+  try
+    server   := arquivoini.ReadString('conexao', 'server',   'localhost');
+    port     := arquivoini.ReadString('conexao', 'port',     '5432');
+    database := arquivoini.ReadString('conexao', 'database', '');
+    user     := arquivoini.ReadString('conexao', 'user',     '');
+    password := arquivoini.ReadString('conexao', 'password', '');
+  finally
+    arquivoini.Free;
+  end;
+
+  try
+    FConnection        := TFDConnection.Create(nil);
+    FDPhysPGDriverLink := TFDPhysPgDriverLink.Create(nil);
+
+    FConnection.LoginPrompt := False;
+    FConnection.Params.Clear;
+    FConnection.Params.Add('DriverID=PG');          // identificador do driver PostgreSQL
+    FConnection.Params.Add('Server='   + server);
+    FConnection.Params.Add('Port='     + port);
+    FConnection.Params.Add('Database=' + database);
+    FConnection.Params.Add('User_Name='+ user);     // PostgreSQL usa User_Name
+    FConnection.Params.Add('Password=' + password);
+
+    // Charset recomendado para evitar problemas com acentuação
+    FConnection.Params.Add('CharacterSet=UTF8');
+
+    FConnection.Open;
+
+    FQuery            := TFDQuery.Create(nil);
+    FQuery.Connection := FConnection;
+  except
+    on E: Exception do
+    begin
+      FQuery.Free;
+      FConnection.Free;
+      FDPhysPGDriverLink.Free;
+      ExceptionDatabase(E.Message);
+    end;
+  end;
+end;
+
+destructor TConfiguracaoBD.Destroy;
+begin
+  FQuery.Free;
+  FConnection.Free;
+  FDPhysPGDriverLink.Free;
+  inherited;
+end;
+
+procedure TConfiguracaoBD.ExecSql(sql: string);
+begin
+  try
+    FQuery.SQL.Clear;
+    FQuery.SQL.Add(sql);
+    FQuery.ExecSQL;
+  except
+    on E: Exception do
+      ExceptionDatabase(E.Message);
+  end;
+end;
+
+procedure TConfiguracaoBD.SetQuery(const Value: TFDQuery);
+begin
+  FQuery := Value;
+end;
+
+end.

@@ -34,7 +34,7 @@ var
   sql : string;
 begin
 
-  sql :=  'update clientes set nome = '+ QuotedStr(cliente.Nome) + ',' +
+  sql :=  'update cliente set nome = '+ QuotedStr(cliente.Nome) + ',' +
           'cep = ' + QuotedStr(cliente.Cep) + ',' +
           'logradouro = ' + QuotedStr(cliente.Logradouro) + ',' +
           'complemento = ' + QuotedStr(cliente.Complemento) + ',' +
@@ -43,7 +43,7 @@ begin
           'cidade = ' + QuotedStr(cliente.Cidade) + ',' +
           'telefone = ' + QuotedStr(cliente.Telefone) + ',' +
           'documento = ' + QuotedStr(cliente.Documento) +
-          'where id = ' + IntToStr(cliente.Id) ;
+          ' where id = ' + IntToStr(cliente.Id) ;
 
   ConfiguraçãoDB.ExecSql(sql);
 end;
@@ -53,8 +53,8 @@ var
   sql : string;
 begin
 
-  sql :=  'insert into Clientes (nome, documento, cep, logradouro,'+
-          'numero, complemento, bairro, cidade, uf, telefone)'+
+  sql :=  'insert into cliente (nome, documento, cep, logradouro,'+
+          'complemento, bairro, cidade, uf, telefone)'+
           'values ('+
           QuotedStr(cliente.Nome)  +  ',' +
           QuotedStr(cliente.Documento)  +  ',' +
@@ -73,10 +73,14 @@ end;
 function TRepositoryCliente.Consultar(dto: DtoCliente): TList<TCliente>;
 var
   sql : string;
-  lcliente : TCliente;
+  lcliente  : TCliente;
+//  lista     : TList<TCliente>;  //-
 begin
 
-  sql :=  'select * from clientes where 1 = 1';
+//  lista := TList<TCliente>.Create;     //-
+//  result := lista;                     //-
+
+  sql :=  'select * from cliente where 1 = 1';
 
   if dto.id > 0 then begin
     sql :=  sql + ' and id = ' + IntToStr(dto.id);
@@ -94,7 +98,7 @@ begin
     Lista.clear;
     with ConfiguraçãoDB do begin
       Query.First;
-      while not Query.Eof do
+      while not Query.Eof do begin
         lcliente              :=  TCliente.Create;
         lcliente.Id           :=  Query.FieldByName('id').AsInteger;
         lcliente.Nome         :=  Query.FieldByName('nome').AsString;
@@ -107,14 +111,14 @@ begin
         lcliente.UF           :=  Query.FieldByName('UF').AsString;
         lcliente.Telefone     :=  Query.FieldByName('Telefone').AsString;
         lcliente.Documento    :=  Query.FieldByName('Documento').AsString;
-
         Lista.Add(lcliente);
-
+        Query.Next;         //-
+      end;
+      Query.Close;
     end;
-
   end;
-
   result  :=  Lista;
+//  Lista.Free;
 end;
 
 constructor TRepositoryCliente.create;
@@ -135,7 +139,7 @@ var
   sql : string;
 begin
 
-  sql :=  'delete from clientes where id = '+ IntToStr(id);
+  sql :=  'delete from cliente where id = '+ IntToStr(id);
 
   ConfiguraçãoDB.ExecSql(sql);
 

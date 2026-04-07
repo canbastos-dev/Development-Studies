@@ -96,9 +96,7 @@ function TCasoUsoVeiculo.Consultar(dto: DtoVeiculo): TResponse;
 var
   response  : TResponse;
 begin
-
   try
-
     ListaObjeto.Clear;
     Lista :=  FRepository.Consultar(dto);
 
@@ -107,19 +105,19 @@ begin
       response.ErrorCode  :=  0;
       response.Message    := RetornaMsgResponse.CONSULTA_REALIZADA_COM_SUCESSO;
       response.Data       := ListaVeiculoParaListaObjeto(ListaObjeto, Lista);
-
     end else begin
       response.success    :=  True;
       response.ErrorCode  :=  0;
       response.Message    := RetornaMsgResponse.CONSULTA_REALIZADA_SEM_RETORNO;
       response.Data       := nil;
-
     end;
 
   Except
     on e: Exception do
       begin
-
+        response.success   := False;
+        response.ErrorCode := -1;
+        response.Message   := e.Message; // nunca engula exceções silenciosamente
       end;
 
   end;
@@ -146,7 +144,9 @@ begin
   Except
     on e: Exception do
       begin
-
+        response.success   := False;
+        response.ErrorCode := -1;
+        response.Message   := e.Message; // nunca engula exceções silenciosamente
       end;
 
   end;

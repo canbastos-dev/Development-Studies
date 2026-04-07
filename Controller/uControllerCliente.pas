@@ -64,11 +64,11 @@ begin
       cliente.Cep  :=  cep;
     end;
 
-      if logradouro <>  '' then begin
+    if logradouro <>  '' then begin
       cliente.Logradouro  :=  logradouro;
     end;
 
-      if complemento <>  '' then begin
+    if complemento <>  '' then begin
       cliente.Complemento  :=  complemento;
     end;
 

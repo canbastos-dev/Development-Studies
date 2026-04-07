@@ -42,7 +42,6 @@ var
 begin
 
   try
-
     cliente.ValidarRegrasNegocios;
 
     FRepository.Alterar(cliente);
@@ -57,19 +56,16 @@ begin
       begin
         response  := TratarException(e)
       end;
-
   end;
-
   result := response;
+  cliente.Free;
 end;
 
 function TCasoUsoCliente.Cadastrar(cliente: TCliente): TResponse;
 var
   response  : TResponse;
 begin
-
   try
-
     cliente.ValidarRegrasNegocios;
 
     FRepository.Cadastrar(cliente);
@@ -82,7 +78,9 @@ begin
   Except
     on e: Exception do
       begin
-
+        response.success   := False;
+        response.ErrorCode := -1;
+        response.Message   := e.Message; // nunca engula exceções silenciosamente
       end;
 
   end;
@@ -93,6 +91,7 @@ end;
 function TCasoUsoCliente.Consultar(dto: DtoCliente): TResponse;
 var
   response  : TResponse;
+  Lista     : TList<TCliente>;
 begin
 
   try
@@ -104,24 +103,20 @@ begin
       response.ErrorCode  :=  0;
       response.Message    := RetornaMsgResponse.CONSULTA_REALIZADA_COM_SUCESSO;
       response.Data       := ListaClienteParaListaObjeto(ListaObjeto, Lista);
-
     end else begin
       response.success    :=  True;
       response.ErrorCode  :=  0;
       response.Message    := RetornaMsgResponse.CONSULTA_REALIZADA_SEM_RETORNO;
       response.Data       := nil;
-
     end;
-
-
   Except
     on e: Exception do
       begin
-
+        response.success   := False;
+        response.ErrorCode := -1;
+        response.Message   := e.Message; // nunca engula exceções silenciosamente
       end;
-
   end;
-
   result := response;
 end;
 
@@ -129,9 +124,7 @@ function TCasoUsoCliente.Deletar(id: integer): TResponse;
 var
   response  : TResponse;
 begin
-
   try
-
     ValidarId(id);
 
     FRepository.Excluir(id);
@@ -140,28 +133,27 @@ begin
     response.ErrorCode  :=  0;
     response.Message    := RetornaMsgResponse.DELETADO_COM_SUCESSO;
     response.Data       := nil;
-
   Except
     on e: Exception do
       begin
-
+        response.success   := False;
+        response.ErrorCode := -1;
+        response.Message   := e.Message; // nunca engula exceções silenciosamente
       end;
-
   end;
-
   result := response;
 end;
 
-constructor TCasoUsoCliente.create(repository: IRepositoryCliente);
-begin
-  FRepository :=  repository;
-  Lista :=  TList<TCliente>.Create;
-  ListaObjeto  := TList<TObject>.Create;
-end;
+  constructor TCasoUsoCliente.create(repository: IRepositoryCliente);
+  begin
+    FRepository :=  repository;
+//    Lista :=  TList<TCliente>.Create;
+    ListaObjeto  := TList<TObject>.Create;
+  end;
 
 destructor TCasoUsoCliente.destroy;
 begin
-  Lista.Free;
+//  Lista.Free;
   ListaObjeto.Free;
   inherited;
 end;

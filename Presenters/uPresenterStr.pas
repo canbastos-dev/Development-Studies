@@ -2,7 +2,7 @@ unit uPresenterStr;
 
 interface
 uses uIPresenter, uCliente, uResponse, System.Generics.Collections,
-  System.SysUtils, uVeiculo, uUtils;
+  System.SysUtils, uVeiculo, uUtils, uLocacao;
 
 type
   TPresenterStr = class(TInterfacedObject, IPresenter)
@@ -10,6 +10,7 @@ type
     function ConverterResponse(response :TResponse) : string;
     function ConverterCliente(cliente :TCliente) : string;
     function ConverterVeiculo(veiculo :TVeiculo) : string;
+    function ConverterLocacao(locacao :TLocacao) : string;
     function ConverterLista(lista :TList<TObject>) : string;
   end;
 
@@ -54,9 +55,28 @@ begin
       if _Object is TVeiculo then begin
         _lista  := _lista  + ConverterVeiculo(Tveiculo(_object)) + #13#10;
       end;
+
+      if _Object is TLocacao then begin
+        _lista  := _lista  + ConverterLocacao(TLocacao(_object)) + #13#10;
+      end;
+
     end;
   end;
   Result  := _lista;
+end;
+
+function TPresenterStr.ConverterLocacao(locacao: TLocacao): string;
+var
+  _locacao  :string;
+begin
+  _locacao  :=  'Id:'             + IntToStr(locacao.Id)                + #13#10 +
+                'Cliente:'        + ConverterCliente(locacao.Cliente)   + #13#10 +
+                'Veiculo:'        + ConverterVeiculo(locacao.Veiculo)   + #13#10 +
+                'DataLocacao:'    + DateToStr(locacao.DataLocacao)      + #13#10 +
+                'DataDevolucao:'  + DateToStr(locacao.DataDevolucao)    + #13#10 +
+                'Valor:'          + currtostr(locacao.Total)            + #13#10;
+
+  result  :=  _locacao;
 end;
 
 function TPresenterStr.ConverterResponse(response: TResponse): string;
@@ -66,9 +86,9 @@ begin
   if response.success then success  :=  'true'
   else success  :=  'false';
 
-  _response :=  'Success:    '  + success + '#13#10'  +
-                'ErrorCode:  '  + inttostr(response.ErrorCode) + '#13#10'  +
-                'Message:    '  + response.Message + '#13#10'  +
+  _response :=  'Success:    '  + success + #13#10  +
+                'ErrorCode:  '  + inttostr(response.ErrorCode) + #13#10  +
+                'Message:    '  + response.Message + #13#10  +
                 'Data:       '  + ConverterLista(response.Data);
 
   result  :=  _response;
@@ -78,11 +98,11 @@ function TPresenterStr.ConverterVeiculo(veiculo: TVeiculo): string;
 var
   _veiculo  : string;
 begin
-   _veiculo :=  'Id:  '     + IntToStr(veiculo.id)                  + '#13#10'  +
-                'Nome:  '   + veiculo.Nome                          + '#13#10'  +
-                'Placa:  '  + veiculo.Placa                         + '#13#10'  +
-                'Status:  ' + ConverteStatusString(veiculo.Status)  + '#13#10'  +
-                'Valor:  '  + CurrToStr(veiculo.Valor)              + '#13#10';
+   _veiculo :=  'Id:  '     + IntToStr(veiculo.id)                  + #13#10  +
+                'Nome:  '   + veiculo.Nome                          + #13#10  +
+                'Placa:  '  + veiculo.Placa                         + #13#10  +
+                'Status:  ' + ConverteStatusString(veiculo.Status)  + #13#10  +
+                'Valor:  '  + CurrToStr(veiculo.Valor)              + #13#10;
 end;
 
 end.

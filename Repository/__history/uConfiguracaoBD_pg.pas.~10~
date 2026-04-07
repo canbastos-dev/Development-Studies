@@ -1,0 +1,147 @@
+unit uConfiguracaoBD_pg;
+
+interface
+
+uses
+  FireDAC.Comp.Client,
+  FireDAC.Phys.PG,
+  FireDAC.Phys.PGDef,
+  IniFiles,
+  System.SysUtils,
+  Data.DB,
+  uExceptions;
+
+type
+  TConfiguracaoBD = class
+  private
+    FConnection        : TFDConnection;
+    FDPhysPGDriverLink : TFDPhysPgDriverLink;
+    FQuery             : TFDQuery;
+    procedure CarregarConfiguracao(out AServer, APort, ADatabase, AUser, APassword: string);
+  public
+    constructor Create;
+    destructor  Destroy; override;
+
+    function  Conexao: TFDConnection;
+    procedure ExecSql(const ASql: string);
+    function  Consulta(const ASql: string): Boolean;
+    property  Query: TFDQuery read FQuery;
+  end;
+
+implementation
+
+{ TConfiguracaoBD }
+
+procedure TConfiguracaoBD.CarregarConfiguracao(
+  out AServer, APort, ADatabase, AUser, APassword: string);
+var
+  LIni: TIniFile;
+  LDir: string;
+begin
+  LDir := ExtractFilePath(ParamStr(0));
+  LIni := TIniFile.Create(LDir + 'Config.ini');
+  try
+    AServer   := LIni.ReadString('conexao', 'server',   'localhost');
+    APort     := LIni.ReadString('conexao', 'port',     '5432');
+    ADatabase := LIni.ReadString('conexao', 'database', '');
+    AUser     := LIni.ReadString('conexao', 'user',     '');
+    APassword := LIni.ReadString('conexao', 'password', '');
+  finally
+    LIni.Free;
+  end;
+
+  // Validação mínima
+  if ADatabase.IsEmpty then
+    raise Exception.Create('Config.ini: chave "database" não informada.');
+  if AUser.IsEmpty then
+    raise Exception.Create('Config.ini: chave "user" não informada.');
+end;
+
+constructor TConfiguracaoBD.Create;
+var
+  LServer, LPort, LDatabase, LUser, LPassword: string;
+begin
+  inherited Create;
+
+  CarregarConfiguracao(LServer, LPort, LDatabase, LUser, LPassword);
+
+  FConnection        := TFDConnection.Create(nil);
+  FDPhysPGDriverLink := TFDPhysPgDriverLink.Create(nil);
+  FQuery             := TFDQuery.Create(nil);
+
+  FDPhysPGDriverLink.VendorLib := 'C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Bin\x32bits\libpq.dll';
+
+  try
+    FConnection.LoginPrompt := False;
+    FConnection.Params.Clear;
+    FConnection.Params.Add('DriverID=PG');
+    FConnection.Params.Add('Server='    + LServer);
+    FConnection.Params.Add('Port='      + LPort);
+    FConnection.Params.Add('Database='  + LDatabase);
+    FConnection.Params.Add('User_Name=' + LUser);
+    FConnection.Params.Add('Password='  + LPassword);
+    FConnection.Params.Add('CharacterSet=UTF8');
+
+    FConnection.Open;
+
+    FQuery.Connection := FConnection;
+  except
+    on E: Exception do
+    begin
+      FQuery.Free;
+      FConnection.Free;
+      FDPhysPGDriverLink.Free;
+      // Zera para o destructor não tentar liberar novamente
+      FQuery             := nil;
+      FConnection        := nil;
+      FDPhysPGDriverLink := nil;
+      ExceptionDatabase(E.Message);
+    end;
+  end;
+end;
+
+destructor TConfiguracaoBD.Destroy;
+begin
+  FQuery.Free;
+  FConnection.Free;
+  FDPhysPGDriverLink.Free;
+  inherited;
+end;
+
+function TConfiguracaoBD.Conexao: TFDConnection;
+begin
+  Result := FConnection;
+end;
+
+function TConfiguracaoBD.Consulta(const ASql: string): Boolean;
+begin
+  Result := False;
+  try
+    FQuery.Close;
+    FQuery.SQL.Text := ASql;
+    FQuery.Open;
+    try
+      Result := not FQuery.IsEmpty;
+    finally
+      FQuery.Close;
+    end;
+
+  except
+    on E: Exception do
+      ExceptionDatabase(E.Message);
+  end;
+end;
+
+procedure TConfiguracaoBD.ExecSql(const ASql: string);
+begin
+  try
+    FQuery.Close;
+    FQuery.SQL.Text := ASql;
+    FQuery.ExecSQL;
+  except
+    on E: Exception do
+      ExceptionDatabase(E.Message);
+  end;
+end;
+
+end.

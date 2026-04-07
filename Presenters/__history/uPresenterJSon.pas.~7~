@@ -1,0 +1,89 @@
+unit uPresenterJSon;
+
+interface
+uses uIPresenter, uCliente, uResponse, System.Generics.Collections,
+  System.SysUtils, uVeiculo, uUtils;
+
+type
+  TPresenterJSon = class(TInterfacedObject, IPresenter)
+
+    function ConverterResponse(response :TResponse) : string;
+    function ConverterCliente(cliente :TCliente) : string;
+    function ConverterVeiculo(veiculo :TVeiculo) : string;
+    function ConverterLista(lista :TList<TObject>) : string;
+
+  end;
+
+implementation
+
+{ TPresenterStr }
+
+function TPresenterJSon.ConverterCliente(cliente: TCliente): string;
+var
+  _cliente  : string;
+begin
+  _cliente  :=  '{"id" : '           + inttostr(cliente.Id) + ','  +  #13#10 +
+                '"nome" : "'         + cliente.Nome         + '",' +  #13#10 +
+                '"documento" : "'    + cliente.Documento    + '",' +  #13#10 +
+                '"cep" : "'          + cliente.Cep          + '",' +  #13#10 +
+                '"logradouro" : "'   + cliente.Logradouro   + '",' +  #13#10 +
+                '"complemento" : "'  + cliente.Complemento  + '",' +  #13#10 +
+                '"bairro" : "'       + cliente.Bairro       + '",' +  #13#10 +
+                '"cidade" : "'       + cliente.Cidade       + '",' +  #13#10 +
+                '"uf" : "'           + cliente.UF           + '",' +  #13#10 +
+                '"telefone" : '     + cliente.Telefone     + '"}';
+   result := _cliente;
+end;
+
+function TPresenterJSon.ConverterLista(lista: TList<TObject>): string;
+var
+  _lista  : string;
+  _Object : TObject;
+  i       : integer;
+
+begin
+  if assigned(lista) and (lista.Count > 0) then
+  begin
+
+  for i := 0 to lista.Count - 1 do
+    begin
+      _Object := lista.Items[i];
+      if _Object is TCliente then begin
+        _lista  := _lista  + ConverterCliente(Tcliente(_object)) + #13#10;
+      end;
+
+      if _Object is TVeiculo then begin
+        _lista  := _lista  + ConverterVeiculo(TVeiculo(_object)) + #13#10;
+      end;
+    end;
+  end;
+  Result  := '['+_lista+']';
+end;
+
+function TPresenterJSon.ConverterResponse(response: TResponse): string;
+var
+  _response, success  : string;
+begin
+  if response.success then success  :=  'true'
+  else success  :=  'false';
+
+  _response :=  '{"Success":" '  + success + '",' + '#13#10'  +
+                '"ErrorCode":  '  + inttostr(response.ErrorCode) +','+ '#13#10'  +
+                '"Message":"    '  + response.Message + '",' + '#13#10'  +
+                '"Data":       '  + ConverterLista(response.Data)+'}';
+
+  result  :=  _response;
+end;
+
+function TPresenterJSon.ConverterVeiculo(veiculo: TVeiculo): string;
+var
+  _veiculo  : string;
+begin
+   _veiculo :=  '{"Id":  '      + IntToStr(veiculo.id)                  + ','   + '#13#10'  +
+                '"Nome":"'      + veiculo.Nome                          + '",'  + '#13#10'  +
+                '"Placa":"'     + veiculo.Placa                         + '",'  + '#13#10'  +
+                '"Status":"'    + ConverteStatusString(veiculo.Status)  + '",'  + '#13#10'  +
+                '"Valor":  '    + StringReplace(CurrToStr(veiculo.Valor),',','.',[]) + '}'   + '#13#10';
+end;
+
+end.

@@ -3,22 +3,26 @@ unit uControllerVeiculo;
 interface
 
 uses uVeiculo, uDtoVeiculo, uResponse, uIRepositoryVeiculo, uEnums, uICasoUsoVeiculo,
-  uCasoUsoVeiculo, uUtils;
+  uCasoUsoVeiculo, uUtils, uIPresenter;
 
 type
   TControllerVeiculo  = class
   private
     Fcasouso: ICasoUsoVeiculo;
+    Fpresenter: IPresenter;
     procedure Setcasouso(const Value: ICasoUsoVeiculo);
+    procedure Setpresenter(const Value: IPresenter);
   published
 
     function Cadastrar(nome, placa  :string;  valor :currency): String;
     function Alterar(id :integer; nome, placa, status  :string;  valor :currency): String;
     function Deletar(id :integer): String;
     function Consultar(id :integer; nome, placa  :string): String;
-    property casouso  : ICasoUsoVeiculo read Fcasouso write Setcasouso;
 
-    constructor create(repository : IRepositoryVeiculo);
+    property casouso    : ICasoUsoVeiculo read Fcasouso write Setcasouso;
+    property presenter  : IPresenter read Fpresenter write Setpresenter;
+
+    constructor create(repository : IRepositoryVeiculo; presenter : IPresenter);
     destructor destroy;override;
 
   end;
@@ -61,10 +65,13 @@ begin
       response  :=  casouso.Alterar(Veiculo);
     end;
 
+  {
   if (response.success) and (response.Message = RetornaMsgResponse.ALTERADO_COM_SUCESSO) then
     Result :=  'Alterado com sucesso'
   else
     result :=  'Erro ao Alterar';
+  }
+  result  :=  Presenter.ConverterResponse(response);
 end;
 
 function TControllerVeiculo.Cadastrar(nome, placa: string;
@@ -73,6 +80,7 @@ var
   response  : TResponse;
   Veiculo   : TVeiculo;
 begin
+  veiculo         :=  TVeiculo.Create();
   Veiculo.Nome    :=  nome;
   Veiculo.Placa   :=  placa;
   Veiculo.Valor   :=  valor;
@@ -81,11 +89,13 @@ begin
   response  :=  casouso.Cadastrar(Veiculo);
 
   Veiculo.free;
-
+  {
   if response.success then
     Result :=  'Cadastrado com sucesso'
   else
     result :=  'Erro ao cadastrar';
+  }
+  result  :=  Presenter.ConverterResponse(response);
 end;
 
 function TControllerVeiculo.Consultar(id: integer; nome, placa: string): String;
@@ -98,28 +108,33 @@ begin
   dto.Placa     :=  placa;
 
   response  :=  CasoUso.Consultar(dto);
-
+  {
   if response.success then
     result :=  response.Message
   else
     result  :=  'Erro ao consultar';
+  }
+  result  :=  Presenter.ConverterResponse(response);
 end;
 
-constructor TControllerVeiculo.create(repository: IRepositoryVeiculo);
+constructor TControllerVeiculo.create(repository: IRepositoryVeiculo; presenter : IPresenter);
 begin
+  self.presenter  :=  presenter;
   CasoUso :=  TCasoUsoVeiculo.create(repository);
 end;
-  
+
 function TControllerVeiculo.Deletar(id: integer): String;
 var
   response  : TResponse;
 begin
   response  :=  CasoUso.Deletar(id);
-
+  {
   if response.success then
     Result :=  'Excluído com sucesso'
   else
     result :=  'Erro ao Excluir';
+  }
+  result  :=  Presenter.ConverterResponse(response);
 end;
 
 destructor TControllerVeiculo.destroy;
@@ -131,6 +146,11 @@ end;
 procedure TControllerVeiculo.Setcasouso(const Value: ICasoUsoVeiculo);
 begin
   Fcasouso := Value;
+end;
+
+procedure TControllerVeiculo.Setpresenter(const Value: IPresenter);
+begin
+  Fpresenter := Value;
 end;
 
 end.
