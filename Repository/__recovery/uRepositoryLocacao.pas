@@ -1,0 +1,186 @@
+unit uRepositoryLocacao;
+
+interface
+uses uLocacao, uDtoLocacao, System.Generics.Collections, uIRepositoryLocacao,
+  uConfiguracaoBD_pg, system.SysUtils, uVeiculo, uCliente, uDtoVeiculo, uDtoCliente,
+  uIRepositoryCliente, uIRepositoryVeiculo;
+
+type
+
+  TRepositoryLocacao  = class(TInterfacedObject, IRepositoryLocacao)
+  private
+    configuracaobd  : TConfiguracaoBD;
+    FLista: TList<TLocacao>;
+    FListaCliente: TList<TCliente>;
+    FListaVeiculo: TList<TVeiculo>;
+    repositoryCliente : IRepositoryCliente;
+    repositoryVeiculo : IRepositoryVeiculo;
+    procedure SetLista(const Value: TList<TLocacao>);
+  published
+    procedure Cadastrar(locacao  : TLocacao);
+    procedure Alterar(locacao  : TLocacao);
+    procedure Excluir(id  : integer);
+    function Consultar(dto : DtoLocacao) : TList<TLocacao>;
+
+    property Lista  :   TList<TLocacao> read FLista write SetLista;
+
+    constructor create(repositoryCliente  : IRepositorycliente; repositoryVeiculo :
+    IRepositoryVeiculo);
+    destructor destroy; override;
+
+  end;
+
+implementation
+
+{ TRepositoryLocacao }
+
+procedure TRepositoryLocacao.Alterar(locacao: TLocacao);
+var
+  sql : string;
+begin
+  sql :=  'update locacao set ' +
+          'idcliente= '         + IntToStr(locacao.Cliente.Id) + ', ' +
+          'idveiculo= '         + IntToStr(locacao.Veiculo.Id) + ', ' +
+          'datadevolucao= '     + QuotedStr(FormatDateTime('yyyy-mm-dd', locacao.DataDevolucao)) + ', ' +
+          'valor= '             + StringReplace(CurrToStr(locacao.Total),',','.',[])  + ' ' +
+          'where id='           + IntToStr(locacao.Id);
+   configuracaobd.ExecSql(sql);
+
+   if locacao.Veiculo.id <> locacao.VeiculoAtual.id then begin
+       sql := 'update locacao_veiculos set idveiculo = ' + IntToStr(locacao.Veiculo.id) + ' ' +
+              'where idlocacao  = ' + IntToStr(locacao.Id);
+       configuracaobd.ExecSql(sql);
+   end;
+
+end;
+
+procedure TRepositoryLocacao.Cadastrar(locacao: TLocacao);
+var
+  sql : String;
+begin
+  sql :=  'insert into locacao (idcliente, idveiculo, datalocacao, datadevolucao, valor, hash)' +
+          'values ( ' +
+          inttostr(locacao.Cliente.id)  + ',' +
+          inttostr(locacao.Veiculo.id)  + ',' +
+          QuotedStr(FormatDateTime('yyyy-mm-dd', locacao.DataLocacao))  + ',' +
+          QuotedStr(FormatDateTime('yyyy-mm-dd', locacao.DataDevolucao))  + ',' +
+          StringReplace(CurrToStr(locacao.Total),',','.',[])  + ',' +
+          QuotedStr(locacao.Hash) + ')';
+
+  configuracaobd.ExecSql(sql);
+
+  sql :=  'select id from locacao where hash = ' + QuotedStr(locacao.Hash);
+
+  if configuracaobd.Consulta(sql) then begin
+    locacao.Id  :=  configuracaobd.Query.FieldByName('id').AsInteger;
+  end;
+
+  sql :=  'insert into locacao_veiculos (idlocacao, idveiculo, valor) ' +
+          'values ( '+
+          inttostr(locacao.Id) + ',' +
+          inttostr(locacao.Veiculo.id) + ',' +
+          StringReplace(CurrToStr(locacao.Veiculo.Valor),',','.',[])  + ')';
+
+  configuracaobd.ExecSql(sql);
+end;
+
+function TRepositoryLocacao.Consultar(dto: DtoLocacao): TList<TLocacao>;
+var
+  sql : string;
+  Locacao : TLocacao;
+  _DtoCliente : DtoCliente;
+  _DtoVeiculo : DtoVeiculo;
+begin
+  sql :=  'select l.*, lv.* ' +
+          'from locacao l ' +
+          'inner join locacao_veiculos lv on lv.idlocacao=l.id ' +
+          'where 1=1';
+
+  if dto.id > 0 then begin
+    sql :=  sql + ' and l.id = ' + IntToStr(dto.id);
+  end else begin
+    if dto.idcliente  >  0 then begin
+      sql :=  sql + ' and l.idcliente = ' + IntToStr(dto.idcliente);
+    end;
+    if dto.datalocacao <> StrToDate('30/12/1899') then begin // como SQL S trata data inválida
+      sql := sql  + ' and l.datalocacao = ' + QuotedStr(DateToStr(dto.datalocacao)) ;
+    end;
+    if dto.datadevolucao <> StrToDate('30/12/1899') then begin // como SQL S trata data inválida
+      sql := sql  + ' and l.datalocacao = ' + QuotedStr(DateToStr(dto.datadevolucao));
+    end;
+  end;
+
+  lista.Clear;
+
+  if configuracaobd.Consulta(sql) then begin
+//    lista.Clear;
+    with configuracaobd do begin
+      Query.First;
+      while not Query.Eof do begin
+        Locacao :=  Tlocacao.Create;
+        Locacao.id            := Query.FieldByName('id').AsInteger;
+        Locacao.DataLocacao   := Query.FieldByName('datalocacao').AsDateTime;
+        Locacao.DataDevolucao := Query.FieldByName('datadevolucao').AsDateTime;
+        Locacao.Total         := Query.FieldByName('valor').AsCurrency;
+        _DtoCliente.id        := Query.FieldByName('idcliente').AsInteger;
+
+        FListaCliente :=  repositoryCliente.Consultar(_DtoCliente);
+
+        if FListaCliente.Count  > 0 then begin
+          locacao.Cliente     :=  TCliente.Create;
+          Locacao.Cliente     :=  FListaCliente.Items[0];
+        end;
+
+        _DtoVeiculo.id        :=  Query.FieldByName('idveiculo').AsInteger;
+
+        FlistaVeiculo := RepositoryVeiculo.Consultar(_dtoVeiculo);
+
+        if FListaVeiculo.Count > 0 then begin
+          locacao.Veiculo       :=  TVeiculo.Create;
+          Locacao.Veiculo       :=  FListaVeiculo.Items[0];
+          locacao.VeiculoAtual  :=  locacao.Veiculo;
+        end;
+        lista.Add(locacao);
+        Query.Next;
+      end;
+    end;
+//    Result  :=  Lista;
+  end;
+  Result  :=  Lista;
+end;
+
+constructor TRepositoryLocacao.create(repositoryCliente  : IRepositorycliente; repositoryVeiculo :
+    IRepositoryVeiculo);
+begin
+  self.repositoryCliente  := repositoryCliente;
+  self.repositoryVeiculo  := repositoryVeiculo;
+  Lista                   := TList<TLocacao>.Create;
+  FListaCliente           := TList<TCliente>.Create;
+  FListaVeiculo           := TList<TVeiculo>.Create;
+  configuracaobd          := TConfiguracaoBD.Create;
+end;
+
+destructor TRepositoryLocacao.destroy;
+begin
+  Lista.Free;
+  configuracaobd.free;
+  inherited;
+end;
+
+procedure TRepositoryLocacao.Excluir(id: integer);
+var
+  sql :  string;
+begin
+  sql :=  'delete from locacao where id = ' +   IntToStr(id);
+  configuracaobd.ExecSql(sql);
+
+  sql :=  'delete from locacao_veiculos where idlocacao = ' +   IntToStr(id);
+  configuracaobd.ExecSql(sql);
+end;
+
+procedure TRepositoryLocacao.SetLista(const Value: TList<TLocacao>);
+begin
+  FLista := Value;
+end;
+
+end.

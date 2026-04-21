@@ -19,7 +19,7 @@ type
     procedure Excluir(id  : integer);
     function Consultar(dto  : DtoCliente) : TList<TCliente>;
 
-    property Lista  :   TList<TCliente> read FLista write SetLista;
+    property lLista  :   TList<TCliente> read FLista write SetLista;
 
     constructor create;
     destructor destroy; override;
@@ -95,7 +95,8 @@ begin
   end;
 
   if ConfiguraçãoDB.Consulta(sql) then begin
-    Lista.clear;
+    lLista.clear;
+
     with ConfiguraçãoDB do begin
       Query.First;
       while not Query.Eof do begin
@@ -111,25 +112,25 @@ begin
         lcliente.UF           :=  Query.FieldByName('UF').AsString;
         lcliente.Telefone     :=  Query.FieldByName('Telefone').AsString;
         lcliente.Documento    :=  Query.FieldByName('Documento').AsString;
-        Lista.Add(lcliente);
+        lLista.Add(lcliente);
         Query.Next;         //-
       end;
       Query.Close;
     end;
   end;
-  result  :=  Lista;
-//  Lista.Free;
+  result  :=  lLista;
+//  lLista.Free;
 end;
 
 constructor TRepositoryCliente.create;
 begin
-  Lista :=  TList<TCliente>.Create;
+  lLista :=  TList<TCliente>.Create;
   ConfiguraçãoDB  := TConfiguracaoBD.Create;
 end;
 
 destructor TRepositoryCliente.destroy;
 begin
-  Lista.free;
+  lLista.free;
   ConfiguraçãoDB.Free;
   inherited;
 end;

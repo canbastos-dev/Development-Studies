@@ -25,14 +25,14 @@ type
     procedure SetVeiculoAtual(const Value: TVeiculo);
   published
 
-    property Id : integer read FId write SetId;
-    property Cliente  : TCliente read FCliente write SetCliente;
-    property Veiculo  : TVeiculo read FVeiculo write SetVeiculo;
-    property VeiculoAtual  : TVeiculo read FVeiculoAtual write SetVeiculoAtual;
-    property DataLocacao  : TDatetime read FDataLocacao write SetDataLocacao;
+    property Id             : integer read FId write SetId;
+    property Cliente        : TCliente read FCliente write SetCliente;
+    property Veiculo        : TVeiculo read FVeiculo write SetVeiculo;
+    property VeiculoAtual   : TVeiculo read FVeiculoAtual write SetVeiculoAtual;
+    property DataLocacao    : TDatetime read FDataLocacao write SetDataLocacao;
     property DataDevolucao  : TDatetime read FDataDevolucao write SetDataDevolucao;
-    property Total  : currency read FTotal write SetTotal;
-    property Hash : string read FHash write SetHash;
+    property Total          : currency read FTotal write SetTotal;
+    property Hash           : string read FHash write SetHash;
 
     function CalcularTotal  : Currency;
 
@@ -56,7 +56,7 @@ begin
   if (FDataLocacao <> strtodate('30/12/1899')) and
   (FDataDevolucao <> strtodate('30/12/1899')) then
   begin
-    qtddias :=  DaysBetween(FDataLocacao, FDataDevolucao);
+    qtddias :=  DaysBetween(FDataDevolucao, FDataLocacao);
     if qtddias <= 0 then qtddias:=1;
   end;
 
@@ -66,7 +66,7 @@ end;
 
 constructor TLocacao.create;
 begin
-  // defin~ição de um hash code ja na criação do objeto, capturado no CADASTRAR da lcação
+  // definição de um hash code ja na criação do objeto, capturado no CADASTRAR da lcação
   FHash :=  inttostr(self.GetHashCode);
 end;
 
@@ -124,12 +124,23 @@ begin
       ExceptionLocacaoCliente;
     end;
 
-
-  if FVeiculo.Status  = sAlugado then
-  begin
-    ExceptionLocacaoVeiculoAlugado;
-  end;
-
+  if VeiculoAtual = nil then   // sendo true, é CADASTRAMENTO, pois é preenchida na CONSULTA
+    begin
+      if fveiculo.Status = sAlugado then
+      begin
+        ExceptionLocacaoVeiculoAlugado;
+      end;
+    end else
+    begin
+      if fveiculo.Id <> veiculoatual.Id then
+      begin
+       if fveiculo.Status = sAlugado then
+        begin
+          ExceptionLocacaoVeiculoAlugado;
+        end;
+      end;
+    end;
+  fTotal := CalcularTotal;
 end;
 
 end.

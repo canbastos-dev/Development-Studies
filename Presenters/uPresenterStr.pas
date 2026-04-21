@@ -103,6 +103,8 @@ begin
                 'Placa:  '  + veiculo.Placa                         + #13#10  +
                 'Status:  ' + ConverteStatusString(veiculo.Status)  + #13#10  +
                 'Valor:  '  + CurrToStr(veiculo.Valor)              + #13#10;
+
+   result  :=  _veiculo;
 end;
 
 end.

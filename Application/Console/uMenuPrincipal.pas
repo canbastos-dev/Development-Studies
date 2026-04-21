@@ -337,7 +337,7 @@ var
 begin
   clean;
   writeln('Cadastro de Veiculos');
-  readln;
+  writeln;
   write(output,'Nome: ');
   readln(input, nome);
   write(output,'Placa: ');
@@ -361,7 +361,7 @@ var
 begin
   clean;
   writeln('Alterar Veiculo');
-  readln;
+  writeln;
   write(output,'Id: ');
   readln(input, id);
   write(output,'Nome: ');
@@ -407,12 +407,13 @@ var
 begin
   clean;
   writeln('Consultar Veiculo');
-  readln;
+  writeln;
   write(output,'Id: ');
   readln(input, id);
   write(output,'Nome: ');
   readln(input, nome);
   write(output,'Placa: ');
+  readln(input, placa);
 
   response  := ControllerVeiculo.Consultar(id, nome, placa);
 
@@ -457,34 +458,99 @@ begin
 end;
 
 procedure CadastrarLocacoes;
+var
+  idcliente, idveiculo  : integer;
+  response              : string;
 begin
   clean;
   writeln('Cadastro de Locações');
+  writeln;
+
+  write(output,'Cliente: ');
+  readln(input, idcliente);
+  write(output,'Veiculo: ');
+  readln(input, idveiculo);
+
+  response  := ControllerLocacao.Cadastrar(idcliente, idveiculo);
+
+  clean;
+  writeln(response);
   readln;
 //  Menu;
 end;
 
 procedure AlterarLocacoes;
+var
+  id, idcliente, idveiculo  : integer;
+  datadevolucao, response  : string;
 begin
   clean;
   writeln('Alterar Locações');
+  writeln;
+
+  write(output,'Id Locacao: ');
+  readln(input, id);
+  write(output,'Cliente: ');
+  readln(input, idcliente);
+  write(output,'Veiculo: ');
+  readln(input, idveiculo);
+  write(output,'Dt Devolucao: ');
+  readln(input, datadevolucao);
+
+  if datadevolucao = '' then datadevolucao:='30/12/1899';
+  response  := ControllerLocacao.Alterar(id, idcliente, idveiculo,
+    strtodate(datadevolucao));
+  clean;
+  writeln(response);
   readln;
 //  Menu;
 end;
 
 procedure ExcluirLocacoes;
+var
+  response  : string;
+  id        : integer;
 begin
   clean;
   writeln('Excluir Locações');
+  writeln;
+  write(output,'Id: ');
+  readln(input, id);
+
+  response  := ControllerLocacao.Deletar(id);
+
+  clean;
+  writeln(response);
   readln;
 //  Menu;
 end;
 
 procedure ConsultarLocacoes;
+var
+  id, idcliente : integer;
+  dtlocacao, dtdevolucao, status, response  : string;
 begin
   clean;
   writeln('Consultar Locações');
+  writeln;
+  write(output,'Id: ');
+  readln(input, id);
+  write(output,'Id Cliente: ');
+  readln(input, idcliente);
+  write(output,'Data Locação: ');
+  readln(input, dtlocacao);
+  write(output,'Data Devolução: ');
+  readln(input, dtdevolucao);
+
+  if dtlocacao = '' then dtlocacao:='30/12/1899';
+  if dtdevolucao = '' then dtdevolucao:='30/12/1899';
+
+  response  := ControllerLocacao.Consultar(id, idcliente, strtodate(dtlocacao), strtodate(dtdevolucao));
+
+  clean;
+  writeln(response);
   readln;
+
 //  Menu;
 end;
 

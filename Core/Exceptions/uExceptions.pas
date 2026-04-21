@@ -75,7 +75,7 @@ end;
 
 procedure ExceptionLocacaoVeiculoAlugado;
 begin
-
+  raise TExceptionLocacaoVeiculoAlugado.Create('Veiculo INDISPONÍVEL, ja foi alugado');
 end;
 
 procedure ExceptionNomeVeiculo;
@@ -100,7 +100,7 @@ end;
 
 procedure ExceptionValorVeiculo;
 begin
-  raise TExceptionPlacaVeiculo.Create('Valor deve ser preenchida');
+  raise TExceptionValorVeiculo.Create('Valor deve ser preenchida');
 end;
 
 

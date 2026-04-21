@@ -15,7 +15,6 @@ type
     procedure SetLista(const Value: TList<TCliente>);
     procedure SetListaObjeto(const Value: TList<TObject>);
 
-
   published
 
   function Cadastrar(cliente  : TCliente): TResponse;

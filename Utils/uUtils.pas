@@ -3,7 +3,7 @@
 interface
 
 uses System.SysUtils, uResponse, uExceptions, uEnums, uCliente,
-      system.Generics.Collections, typinfo, uVeiculo, uLocacao;
+      system.Generics.Collections, typinfo, uVeiculo, uLocacao, Vcl.Dialogs;
 
 function TratarException(e : Exception) : TResponse;
 
@@ -60,6 +60,14 @@ begin
 
   end;
   result  :=  listaObjeto;
+
+  {
+  if listaObjeto = nil then
+    raise Exception.Create('Lista retornou nil')
+  else
+    ShowMessage(' Lista de objetos, No Registros encontrados: ' + listaObjeto.Count.ToString);
+  }
+
 end;
 
 function ListaLocacaoParaListaObjeto(listaObjeto  : TList<TObject>;

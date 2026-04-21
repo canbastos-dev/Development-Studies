@@ -98,7 +98,8 @@ begin
   result  :=  Presenter.ConverterResponse(response);
 end;
 
-function TControllerVeiculo.Consultar(id: integer; nome, placa: string): String;
+function TControllerVeiculo.Consultar(id: integer; nome,
+  placa: string): String;
 var
   response  : TResponse;
   dto : DtoVeiculo;
@@ -108,12 +109,7 @@ begin
   dto.Placa     :=  placa;
 
   response  :=  CasoUso.Consultar(dto);
-  {
-  if response.success then
-    result :=  response.Message
-  else
-    result  :=  'Erro ao consultar';
-  }
+
   result  :=  Presenter.ConverterResponse(response);
 end;
 

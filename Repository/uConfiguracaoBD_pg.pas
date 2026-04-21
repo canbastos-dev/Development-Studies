@@ -69,7 +69,7 @@ begin
   FDPhysPGDriverLink := TFDPhysPgDriverLink.Create(nil);
   FQuery             := TFDQuery.Create(nil);
 
-  FDPhysPGDriverLink.VendorLib := 'C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Bin\x32bits\libpq.dll';
+//  FDPhysPGDriverLink.VendorLib := 'C:\Users\Claudio\Documents\Development\Delphi\Academia\Udemy\Bin\x32bits\libpq.dll';
 
   try
     FConnection.LoginPrompt := False;

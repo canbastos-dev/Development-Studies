@@ -33,7 +33,8 @@ type
     property Presenter      : IPresenter read FPresenter write SetPresenter;
 
     constructor create(repositoryLocacao  :IRepositoryLocacao;
-      repositoryVeiculo  :IRepositoryVeiculo; repositoryCliente :IRepositoryCliente ;
+      repositoryVeiculo  :IRepositoryVeiculo;
+      repositoryCliente :IRepositoryCliente ;
       Presenter	: IPresenter);
     destructor destroy;override;
 
@@ -54,6 +55,15 @@ var
   _dtoVeiculo : DtoVeiculo;
   _dtoLocacao : DtoLocacao;
 begin
+
+  if (datadevolucao = strtodate('30/12/1899')) and (idcliente=0) and (idveiculo=0) then begin
+      response.Message  :=  'Data não pode ser vazia';
+      response.ErrorCode  :=  RetornaErrorsCode.ID_INVALIDO;
+      result  :=  Presenter.ConverterResponse(response);
+      exit;
+  end;
+
+
   if idcliente >  0 then begin
     _dtoCliente.id  :=  idcliente;
     response  :=  CasoUsoCliente.Consultar(_dtoCliente);
@@ -66,7 +76,6 @@ begin
     end else begin
       cliente :=  TCliente(response.Data[0]);
     end;
-
   end;
 
   if idveiculo >  0 then begin
@@ -82,55 +91,84 @@ begin
     end;
   end;
 
-    _dtoLocacao.Id  :=  idlocacao;
-    response  :=  CasoUsoLocacao.Consultar(_dtoLocacao);
-    if (response.success) and (response.Message = RetornaMsgResponse.CONSULTA_REALIZADA_SEM_RETORNO) then begin
-      response.Message  :=  'id da Locação inválido';
-      response.ErrorCode  :=  RetornaErrorsCode.ID_INVALIDO;
-      result  :=  Presenter.ConverterResponse(response);
-      exit;
-    end else begin
-      locacao :=  TLocacao(response.Data[0]);
-    end;
+  _dtoLocacao.Id  :=  idlocacao;
+  response  :=  CasoUsoLocacao.Consultar(_dtoLocacao);
 
-    if idcliente  > 0 then locacao.Cliente  :=  cliente;
-    if idveiculo  > 0 then locacao.Veiculo  :=  veiculo;
+  if (response.success) and (response.Message = RetornaMsgResponse.CONSULTA_REALIZADA_SEM_RETORNO) then begin
+    response.Message  :=  'id da Locação inválido';
+    response.ErrorCode  :=  RetornaErrorsCode.ID_INVALIDO;
+    result  :=  Presenter.ConverterResponse(response);
+    exit;
+  end else begin
+    locacao :=  TLocacao(response.Data[0]);
+  end;
 
-    if datadevolucao <> strtodate('39/12/1899') then
-      locacao.DataDevolucao :=  datadevolucao;
+  if idcliente > 0 then locacao.Cliente  :=  cliente;
+  if idveiculo > 0 then locacao.Veiculo  :=  veiculo;
 
-    response  :=  CasoUsoLocacao.Alterar(locacao);
+  if datadevolucao <> strtodate('30/12/1899') then
+    locacao.DataDevolucao :=  datadevolucao;
 
-    if response.success then begin
-      if locacao.Veiculo.id <>  locacao.VeiculoAtual.id then begin
-        locacao.VeiculoAtual.Status :=  sDisponivel;
-        responseVeiculo := CasoUsoVeiculo.Alterar(locacao.VeiculoAtual);
+  response  :=  CasoUsoLocacao.Alterar(locacao);
 
-        if not responseVeiculo.success and not
-        (responseVeiculo.Message = RetornaMsgResponse.ALTERADO_COM_SUCESSO) then begin
+  if response.success then begin
+    if (datadevolucao <>  StrTodate('30/12/1899'))  then begin
+//    if locacao.Veiculo.id <>  locacao.VeiculoAtual.id then begin
+      locacao.VeiculoAtual.Status :=  sDisponivel;
+      responseVeiculo := CasoUsoVeiculo.Alterar(locacao.Veiculo);
+      if not responseVeiculo.success and not
+      (responseVeiculo.Message = RetornaMsgResponse.ALTERADO_COM_SUCESSO) then begin
+        responseVeiculo.Message    :=    'erro ao atualizar status do veículo';
+        responseVeiculo.ErrorCode   :=  RetornaErrorsCode.ERROR_BANCO_DADOS;
+        result  :=  Presenter.ConverterResponse(responseVeiculo);
+        exit;
+      end;
 
+      {
+      else begin
+        locacao.Veiculo.Status  :=  sAlugado;
+        responseVeiculo :=  CasoUsoVeiculo.Alterar(locacao.Veiculo);
+         if not response.success and not
+          (responseVeiculo.Message = RetornaMsgResponse.ALTERADO_COM_SUCESSO) then begin
           responseVeiculo.Message  :=    'erro ao atualizar status do veículo';
           responseVeiculo.ErrorCode  :=  RetornaErrorsCode.ERROR_BANCO_DADOS;
           result  :=  Presenter.ConverterResponse(responseVeiculo);
           exit;
-        end
-        else begin
-          locacao.Veiculo.Status  :=  sAlugado;
-          responseVeiculo :=  CasoUsoVeiculo.Alterar(locacao.Veiculo);
-
-          if not response.success and not
-            (responseVeiculo.Message = RetornaMsgResponse.ALTERADO_COM_SUCESSO) then begin
-            responseVeiculo.Message  :=    'erro ao atualizar status do veículo';
-            responseVeiculo.ErrorCode  :=  RetornaErrorsCode.ERROR_BANCO_DADOS;
-            result  :=  Presenter.ConverterResponse(responseVeiculo);
-            exit;
-          end;
         end;
+      }
 
-
-      end;
     end;
 
+    if locacao.Veiculo.id <>  locacao.VeiculoAtual.id then
+    begin
+       locacao.VeiculoAtual.Status := sDisponivel;
+       responseveiculo := CasoUsoVeiculo.Alterar(locacao.VeiculoAtual);
+
+       if not responseveiculo.success and
+       not (responseVeiculo.Message = RetornaMsgResponse.ALTERADO_COM_SUCESSO) then
+       begin
+           responseveiculo.Message := 'erro ao atualizar status veículo';
+           responseVeiculo.ErrorCode  :=  RetornaErrorsCode.ERROR_BANCO_DADOS;
+           result := Presenter.ConverterResponse(responseveiculo);
+           exit;
+       end else
+       begin
+
+          locacao.Veiculo.Status := sAlugado;
+          responseveiculo := CasoUsoVeiculo.Alterar(locacao.Veiculo);
+
+           if not responseveiculo.success and
+          not (responseveiculo.Message = RetornaMsgResponse.ALTERADO_COM_SUCESSO) then
+          begin
+
+            responseveiculo.Message := 'erro ao atualizar status veículo';
+            responseveiculo.ErrorCode := RetornaErrorsCode.ERROR_BANCO_DADOS;
+            result := Presenter.ConverterResponse(responseveiculo);
+           exit;
+          end;
+       end;
+    end;
+  end;
   result  :=  Presenter.ConverterResponse(response);
 end;
 
@@ -182,10 +220,9 @@ begin
 
   if response.success then begin
     veiculo.Status  := sAlugado;
-    response_veic :=  CasoUsoVeiculo.Alterar(veiculo);
+    response_veic   := CasoUsoVeiculo.Alterar(veiculo);
 
     if response_veic.success = false then begin
-
       response.Message    :=  'erro ao alterar status';
       response.ErrorCode  :=  RetornaErrorsCode.ERROR_BANCO_DADOS;
       result  :=  Presenter.ConverterResponse(response);
@@ -193,7 +230,6 @@ begin
     end;
   end;
   Result :=  Presenter.ConverterResponse(response);
-
 end;
 
 function TControllerLocacao.Consultar(idlocacao, idcliente: integer;

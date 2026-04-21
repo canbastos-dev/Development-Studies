@@ -1,0 +1,137 @@
+unit uExceptions;
+
+interface
+
+uses System.SysUtils;
+
+type
+  TExceptionNome             = class(Exception);
+  TExceptionMinimoNome       = class(Exception);
+  TExceptionDocumento        = class(Exception);
+  TExceptionMinimoDocumento  = class(Exception);
+  TExceptionTelefone         = class(Exception);
+  TExceptionMinimoTelefone   = class(Exception);
+
+  TExceptionNomeVeiculo         =   class (exception);
+  TExceptionMinimoNomeVeiculo   =   class (exception);
+  TExceptionPlacaVeiculo        =   class (exception);
+  TExceptionMinimoPlacaVeiculo  =   class (exception);
+  TExceptionValorVeiculo        =   class (exception);
+
+  TExceptionLocacaoVeiculo               =   class (exception);
+  TExceptionLocacaoCliente               =   class (exception);
+  TExceptionLocacaoVeiculoAlugado        =   class (exception);
+
+  TExceptionDatabase            = class(exception);
+
+  TExceptionIdInvalido          =   class (exception);
+
+// exceptions CLIENTES
+procedure ExceptionNome;
+procedure ExceptionMinimoNome;
+procedure ExceptionDocumento;
+procedure ExceptionMinimoDocumento;
+procedure ExceptionTelefone;
+procedure ExceptionMinimoTelefone;
+
+//Exceptions VEICULOS
+procedure ExceptionNomeVeiculo;
+procedure ExceptionMinimoNomeVeiculo;
+procedure ExceptionPlacaVeiculo;
+procedure ExceptionMinimoPlacaVeiculo;
+procedure ExceptionValorVeiculo;
+
+//Exceptions LOCAÇÕES
+procedure ExceptionLocacaoVeiculo;
+procedure ExceptionLocacaoCliente;
+procedure ExceptionLocacaoVeiculoAlugado;
+
+procedure ExceptionDatabase(message : string);
+
+procedure ExceptionIdInvalido;
+
+
+implementation
+
+procedure ExceptionIdInvalido;
+begin
+  raise TExceptionIdInvalido.Create('Id Invalido');
+end;
+
+procedure ExceptionDatabase(message : string);
+begin
+  raise TExceptionDatabase.Create(message);
+end;
+
+procedure ExceptionLocacaoVeiculo;
+begin
+  raise TExceptionLocacaoVeiculo.Create('Veículo não informado');
+end;
+
+procedure ExceptionLocacaoCliente;
+begin
+  raise TExceptionLocacaoCliente.Create('Cliente não informado');
+end;
+
+procedure ExceptionLocacaoVeiculoAlugado;
+begin
+
+end;
+
+procedure ExceptionNomeVeiculo;
+begin
+  raise TExceptionNomeVeiculo.Create('Nome deve ser preenchido');
+end;
+
+procedure ExceptionMinimoNomeVeiculo;
+begin
+  raise TExceptionMinimoNomeVeiculo.Create('Nome deve conter mínimo de 3 caracteres');
+end;
+
+procedure ExceptionPlacaVeiculo;
+begin
+  raise TExceptionPlacaVeiculo.Create('Placa deve ser preenchida');
+end;
+
+procedure ExceptionMinimoPlacaVeiculo;
+begin
+  raise TExceptionMinimoPlacaVeiculo.Create('Placa deve conter mínimo de 6 caracteres');
+end;
+
+procedure ExceptionValorVeiculo;
+begin
+  raise TExceptionPlacaVeiculo.Create('Valor deve ser preenchida');
+end;
+
+
+procedure ExceptionTelefone;
+begin
+ raise TExceptionTelefone.Create('Telefone ser preenchido');
+end;
+
+procedure ExceptionMinimoTelefone;
+begin
+ raise TExceptionMinimoTelefone.Create('Telefone deve ser maior que 4 caracteres');
+end;
+
+procedure ExceptionMinimoDocumento;
+begin
+ raise TExceptionMinimoDocumento.Create('Documento deve ser maior que 4 caracteres');
+end;
+
+procedure ExceptionDocumento;
+begin
+ raise TExceptionNome.Create('Documento deve ser informado');
+end;
+
+procedure ExceptionNome;
+begin
+ raise TExceptionNome.Create('Nome deve ser informado');
+end;
+
+procedure ExceptionMinimoNome;
+begin
+ raise TExceptionMinimoNome.Create('Nome deve ser maior que 4 caracteres');
+end;
+
+end.

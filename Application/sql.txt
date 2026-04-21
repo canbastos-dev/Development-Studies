@@ -1,0 +1,11 @@
+select l.*, lv.* from locacao l inner join locacao_veiculos lv on lv.idlocacao=l.id where 1=1 and l.id=6
+
+select * from locacao
+select * from locacao_veiculos
+select * from veiculo
+
+update veiculo set status='sDisponivel'
+
+delete from locacao_veiculos
+
+delete from locacao

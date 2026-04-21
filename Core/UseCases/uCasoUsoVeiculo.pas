@@ -3,7 +3,7 @@ unit uCasoUsoVeiculo;
 interface
 
 uses uVeiculo, uICasoUsoVeiculo, uDTOVeiculo, uResponse, uExceptions, uEnums, uUtils,
-  System.SysUtils,System.Generics.Collections, uIRepositoryVeiculo;
+  System.SysUtils, System.Generics.Collections, uIRepositoryVeiculo, Vcl.Dialogs;
 
 type
   TCasoUsoVeiculo = class(TInterfacedObject, ICasoUsoVeiculo)
@@ -100,11 +100,26 @@ begin
     ListaObjeto.Clear;
     Lista :=  FRepository.Consultar(dto);
 
+    {
+    // Logo após, adicione um teste:
+    if Lista = nil then
+      raise Exception.Create('Lista retornou nil')
+    else
+      ShowMessage('Registros encontrados: ' + Lista.Count.ToString);
+    }
+
     if Lista.Count  > 0 then begin
       response.success    :=  True;
       response.ErrorCode  :=  0;
       response.Message    := RetornaMsgResponse.CONSULTA_REALIZADA_COM_SUCESSO;
       response.Data       := ListaVeiculoParaListaObjeto(ListaObjeto, Lista);
+
+      {
+      if Lista = nil then
+        raise Exception.Create('Lista retornou nil')
+      else
+        ShowMessage(' após passar No Registros encontrados: ' + Lista.Count.ToString);
+      }
     end else begin
       response.success    :=  True;
       response.ErrorCode  :=  0;

@@ -89,10 +89,12 @@ begin
         veiculo.Id           :=  Query.FieldByName('id').AsInteger;
         veiculo.Nome         :=  Query.FieldByName('nome').AsString;
         veiculo.placa        :=  Query.FieldByName('placa').AsString;
+        veiculo.valor        :=  Query.FieldByName('valor').AsCurrency;
         veiculo.status       :=  ConverteStrStatus(Query.FieldByName('status').AsString);
         Lista.Add(veiculo);
         Query.Next;
       end;
+      Query.Close;
     end;
   end;
   result  :=  Lista;
